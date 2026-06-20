@@ -1,0 +1,274 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border-radius: 0;
+}
+
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+    height: 100%;
+}
+
+body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    min-height: 100dvh;
+    overflow-x: hidden;
+    transition: background-color 0.4s ease, color 0.4s ease;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* 메인 스크롤 스냅 레이아웃 */
+.scroll-container {
+    height: 100dvh;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+}
+
+.project-section {
+    height: 100dvh;
+    width: 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 4rem;
+    border-bottom: var(--border-stroke);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 헤더 및 레이아웃 구조 */
+header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: var(--border-stroke);
+    padding: 1.5rem 4rem;
+    background-color: var(--color-bg);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+
+main.main-content {
+    padding-top: 5rem; /* 헤더 높이만큼 여백 */
+}
+
+/* 그리드 레이아웃 */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 2rem;
+    width: 100%;
+}
+
+/* 반응형 미디어 쿼리 (768px 이하 모바일 디바이스) */
+@media (max-width: 768px) {
+    .project-section {
+        padding: 2rem 1.5rem;
+        height: auto;
+        min-height: 100dvh;
+        scroll-snap-align: none;
+    }
+    
+    .scroll-container {
+        height: auto;
+        overflow-y: visible;
+        scroll-snap-type: none;
+    }
+    
+    header {
+        padding: 1rem 1.5rem;
+    }
+    
+    .grid-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+/* 프로젝트 상세 페이지 전용 레이아웃 */
+.project-detail-main {
+    padding-bottom: 8rem;
+}
+
+.project-detail-section {
+    height: auto;
+    min-height: 100dvh;
+    scroll-snap-align: none;
+    border-bottom: none;
+    display: block;
+    padding-top: 8rem;
+}
+
+.project-info-column {
+    grid-column: span 6;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.project-detail-title {
+    margin-bottom: 2rem;
+}
+
+.project-meta-grid {
+    border-top: var(--border-stroke);
+    padding-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+.project-meta-sublabel {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+}
+
+.project-meta-value {
+    font-family: var(--font-body);
+    font-weight: 500;
+}
+
+.project-link-row {
+    grid-column: span 2;
+    border-top: var(--border-stroke);
+    padding-top: 2rem;
+}
+
+.project-image-column {
+    grid-column: span 6;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.project-image-wrapper {
+    width: 100%;
+    border: var(--border-stroke);
+    background-color: var(--color-border);
+    overflow: hidden;
+}
+
+.project-image-display {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+/* 프로젝트 카드 인덱스 페이지 레이아웃 */
+.project-card-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.project-card-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: var(--border-stroke);
+    padding-bottom: 1.5rem;
+    width: 100%;
+}
+
+.project-card-body {
+    margin: auto 0;
+    padding: 2rem 0;
+}
+
+.project-card-desc {
+    margin-top: 1.5rem;
+}
+
+.project-card-footer {
+    display: flex;
+    justify-content: space-between;
+    border-top: var(--border-stroke);
+    padding-top: 1.5rem;
+    width: 100%;
+}
+
+/* 모바일 전용 반응형 그리드 오버라이드 */
+@media (max-width: 768px) {
+    .project-info-column, .project-image-column {
+        grid-column: span 12;
+    }
+    .project-meta-grid {
+        grid-template-columns: 1fr;
+    }
+    .project-link-row {
+        grid-column: span 1;
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+.auth-panel-wrapper {
+    min-height: 85dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 450px;
+    border: var(--border-stroke);
+    padding: 3rem;
+    background-color: var(--color-bg);
+}
+
+.admin-panel-container {
+    padding: 8rem 4rem 4rem 4rem;
+}
+
+.admin-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: var(--border-stroke);
+    padding-bottom: 2rem;
+    margin-bottom: 3rem;
+}
+
+@media (max-width: 768px) {
+    .admin-panel-container {
+        padding: 6rem 1.5rem 2rem 1.5rem;
+    }
+    .admin-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+}
+
+.col-5 {
+    grid-column: span 5;
+}
+
+.col-7 {
+    grid-column: span 7;
+}
+
+@media (max-width: 768px) {
+    .col-5, .col-7 {
+        grid-column: span 12;
+    }
+}
+

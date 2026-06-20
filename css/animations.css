@@ -1,0 +1,97 @@
+/* 커스텀 마우스 커서 스타일 */
+.custom-cursor {
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--color-accent);
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translate3d(0, 0, 0);
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: difference;
+    will-change: transform;
+    transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+}
+
+/* 커서 호버 상태 */
+.custom-cursor.hovered {
+    width: 50px;
+    height: 50px;
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    mix-blend-mode: normal;
+    opacity: 0.15;
+}
+
+/* 터치 디바이스 커서 예외 처리 (마우스 없는 기기 비활성화) */
+@media (hover: none) or (pointer: coarse) {
+    .custom-cursor {
+        display: none;
+    }
+}
+
+/* 텍스트 리빌 애니메이션 */
+.reveal-wrapper {
+    overflow: hidden;
+    display: block;
+}
+
+.reveal-inner {
+    display: inline-block;
+    transform: translateY(100%);
+    will-change: transform;
+    transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 구동 방식: intersection observer가 .in-view 클래스를 추가하면 동작 */
+.in-view .reveal-inner {
+    transform: translateY(0);
+}
+
+/* 필름 노이즈(Grain/Noise) 캔버스 */
+#noise-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.04;
+}
+
+/* 이미지 호버 리빌 애니메이션 */
+.hover-reveal-image {
+    position: fixed;
+    width: 300px;
+    height: 200px;
+    pointer-events: none;
+    z-index: 50;
+    overflow: hidden;
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.8);
+    will-change: transform, opacity;
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hover-reveal-image.active {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+}
+
+.hover-reveal-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 페이지 전체 무중단 전환 트랜지션 클래스 */
+body {
+    opacity: 1;
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.page-exit {
+    opacity: 0;
+}

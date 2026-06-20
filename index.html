@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PORTFOLIO</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 커스텀 커서 -->
+    <div class="custom-cursor"></div>
+
+    <!-- 노이즈 캔버스 배경 -->
+    <canvas id="noise-canvas"></canvas>
+
+    <!-- 상단 내비게이션 바 -->
+    <header>
+        <a href="/" class="logo">YOONZDA</a>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#" class="nav-link" id="toggle-invert">INVERT</a></li>
+                <li><a href="#" class="nav-link" id="toggle-serif">FONT</a></li>
+                <li><a href="/list.html" class="nav-link">MANAGE</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- 메인 스냅 스크롤 컨테이너 -->
+    <div class="scroll-container">
+        
+            <section class="project-section" id="section-project_1781970399891">
+                <div class="grid-container project-card-container">
+                    <header class="project-meta-header project-card-header">
+                        <span class="project-meta-item"><span class="project-meta-label">NO.</span>01</span>
+                        <span class="project-meta-item"><span class="project-meta-label">YEAR</span>프로젝트 제작 연도</span>
+                    </header>
+                    <div class="project-card-body">
+                        <span class="project-category">프로젝트 분야</span>
+                        <div class="reveal-wrapper">
+                            <h2 class="project-title reveal-inner">
+                                <a href="projects/project_1781970399891.html" class="project-link" data-image="프로젝트 이미지?">프로젝트 제목</a>
+                            </h2>
+                        </div>
+                        <p class="project-desc project-card-desc">프로젝트 설명</p>
+                    </div>
+                    <footer class="project-footer project-card-footer">
+                        <span class="project-meta-item"><span class="project-meta-label">CLIENT</span>프로젝트 고객사</span>
+                        <a href="projects/project_1781970399891.html" class="btn-brutal project-link" data-image="프로젝트 이미지?">VIEW PROJECT</a>
+                    </footer>
+                </div>
+            </section>
+
+    </div>
+
+    <!-- 핵심 모션 및 인터랙션 자바스크립트 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // -----------------------------------------
+            // 1. 커스텀 마우스 커서 (Lerp + requestAnimationFrame)
+            // -----------------------------------------
+            const cursor = document.querySelector('.custom-cursor');
+            let mouseX = 0, mouseY = 0;   // 실제 마우스 위치
+            let cursorX = 0, cursorY = 0; // 보간 처리된 커서 위치
+            const lerpFactor = 0.1;       // 댐핑값 (부드러운 정도)
+            let isMoving = false;
+
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                isMoving = true;
+            });
+
+            function animateCursor() {
+                // 선형 보간(Lerp) 연산
+                cursorX += (mouseX - cursorX) * lerpFactor;
+                cursorY += (mouseY - cursorY) * lerpFactor;
+
+                // GPU 가속 transform3d 적용
+                cursor.style.transform = `translate3d(${cursorX - 10}px, ${cursorY - 10}px, 0)`;
+
+                requestAnimationFrame(animateCursor);
+            }
+            requestAnimationFrame(animateCursor);
+
+            // 링크/버튼 호버 시 커서 확대 효과 적용
+            const interactiveElements = document.querySelectorAll('a, button, input, textarea');
+            interactiveElements.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.classList.add('hovered');
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursor.classList.remove('hovered');
+                });
+            });
+
+            // -----------------------------------------
+            // 2. 뷰포트 내 요소 감지 (Intersection Observer)
+            // -----------------------------------------
+            const sections = document.querySelectorAll('.project-section');
+            const observerOptions = {
+                root: null, // 브라우저 뷰포트 기준
+                threshold: 0.2 // 요소가 20% 이상 노출 시 인식
+            };
+
+            const sectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                    } else {
+                        entry.target.classList.remove('in-view');
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                sectionObserver.observe(section);
+            });
+
+            // -----------------------------------------
+            // 3. 필름 노이즈(Film Grain) 효과 구현
+            // -----------------------------------------
+            const canvas = document.getElementById('noise-canvas');
+            const ctx = canvas.getContext('2d');
+            let w = canvas.width = window.innerWidth;
+            let h = canvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            });
+
+            function renderNoise() {
+                ctx.clearRect(0, 0, w, h);
+                // 매 프레임 전체를 무작위 생성하면 부하가 크므로, 
+                // 작은 픽셀 그리드로 노이즈 구현
+                const idata = ctx.createImageData(w, h);
+                const buffer32 = new Uint32Array(idata.data.buffer);
+                const len = buffer32.length;
+                
+                for (let i = 0; i < len; i += 13) { // 연산 최적화를 위해 오프셋 건너뛰며 그림
+                    if (Math.random() < 0.05) {
+                        buffer32[i] = 0x15ffffff; // 연한 백색 노이즈
+                    }
+                }
+                ctx.putImageData(idata, 0, 0);
+                setTimeout(() => {
+                    requestAnimationFrame(renderNoise);
+                }, 50); // 20fps 정도로 제한하여 성능 점유 최적화
+            }
+            requestAnimationFrame(renderNoise);
+
+            // -----------------------------------------
+            // 4. 테마 반전(Invert) 및 폰트 변경 토글 기능
+            // -----------------------------------------
+            const btnInvert = document.getElementById('toggle-invert');
+            const btnSerif = document.getElementById('toggle-serif');
+
+            // 초기 로컬 스토리지 값 확인
+            if (localStorage.getItem('theme-invert') === 'true') {
+                document.body.classList.add('invert-mode');
+            }
+            if (localStorage.getItem('font-serif') === 'true') {
+                document.body.classList.add('serif-mode');
+            }
+
+            btnInvert.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.body.classList.toggle('invert-mode');
+                localStorage.setItem('theme-invert', document.body.classList.contains('invert-mode'));
+            });
+
+            btnSerif.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.body.classList.toggle('serif-mode');
+                localStorage.setItem('font-serif', document.body.classList.contains('serif-mode'));
+            });
+
+            // -----------------------------------------
+            // 5. 페이지 전환 (Page Transition / No overlay)
+            // -----------------------------------------
+            document.querySelectorAll('a.project-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = link.href;
+                    document.body.classList.add('page-exit');
+                    setTimeout(() => {
+                        window.location.href = target;
+                    }, 400); // animations.css 트랜지션 타임 맞춤
+                });
+            });
+        });
+    </script>
+</body>
+</html>

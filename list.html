@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MANAGE - PORTFOLIO</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 커스텀 커서 -->
+    <div class="custom-cursor"></div>
+
+    <!-- 노이즈 캔버스 배경 -->
+    <canvas id="noise-canvas"></canvas>
+
+    <!-- 상단 내비게이션 바 -->
+    <header>
+        <a href="/" class="logo" id="home-link">YOONZDA</a>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#" class="nav-link" id="toggle-invert">INVERT</a></li>
+                <li><a href="#" class="nav-link" id="toggle-serif">FONT</a></li>
+                <li><a href="/" class="nav-link" id="back-link">BACK TO SITE</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- 메인 컨텐츠 영역 -->
+    <main class="main-content">
+        
+        <!-- 1단계: 비밀번호 로그인 화면 -->
+        <div id="login-panel" class="auth-panel-wrapper">
+            <div class="auth-card">
+                <span class="project-category">ADMIN ACCESS</span>
+                <h1 class="project-title auth-title">LOGIN</h1>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="password" class="label-brutal">PASSWORD</label>
+                        <input type="password" id="password" class="input-brutal" placeholder="ENTER ADMIN PASSWORD" required autocomplete="current-password">
+                    </div>
+                    <div id="login-error" class="project-category text-accent hidden">비밀번호가 올바르지 않습니다.</div>
+                    <button type="submit" class="btn-brutal btn-brutal-full">ACCESS DASHBOARD</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 2단계: 프로젝트 관리 대시보드 (기본 비활성) -->
+        <div id="admin-panel" class="admin-panel-container hidden">
+            <div class="admin-title-row">
+                <div>
+                    <span class="project-category">WORKSPACE</span>
+                    <h1 class="project-title admin-header-title">PROJECT MANAGER</h1>
+                </div>
+                <button id="btn-logout" class="btn-brutal">LOGOUT</button>
+            </div>
+
+            <div class="grid-container">
+                <!-- 좌측 컬럼: 프로젝트 추가 폼 -->
+                <div class="col-5">
+                    <div class="form-container-card">
+                        <span class="project-category">NEW ENTRY</span>
+                        <h2 class="project-title admin-section-title">ADD PROJECT</h2>
+                        
+                        <form id="project-form">
+                            <div class="form-group">
+                                <label for="title" class="label-brutal">PROJECT TITLE (제목)</label>
+                                <input type="text" id="title" class="input-brutal" placeholder="예: BRAND IDENTITY 2026" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="category" class="label-brutal">CATEGORY (분야)</label>
+                                <input type="text" id="category" class="input-brutal" placeholder="예: IDENTITY, WEB, editorial" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="imageUrl" class="label-brutal">IMAGE URL (이미지 경로)</label>
+                                <input type="text" id="imageUrl" class="input-brutal" placeholder="예: https://images.unsplash.com/... 또는 /public/uploads/file.jpg" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="year" class="label-brutal">YEAR (제작 연도)</label>
+                                <input type="text" id="year" class="input-brutal" placeholder="예: 2026" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="client" class="label-brutal">CLIENT (고객사 - 생략 가능)</label>
+                                <input type="text" id="client" class="input-brutal" placeholder="예: GOOGLE KOREA">
+                            </div>
+                            <div class="form-group">
+                                <label for="link" class="label-brutal">LIVE LINK (라이브 주소 - 생략 가능)</label>
+                                <input type="text" id="link" class="input-brutal" placeholder="예: https://example.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="description" class="label-brutal">DESCRIPTION (설명)</label>
+                                <textarea id="description" class="textarea-brutal" placeholder="프로젝트 기획 배경 및 상세 내용을 작성해 주세요." required></textarea>
+                            </div>
+                            <button type="submit" class="btn-brutal btn-brutal-full">SAVE PROJECT</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 우측 컬럼: 프로젝트 목록 및 삭제 제어 -->
+                <div class="col-7">
+                    <span class="project-category">ENTRIES DATABASE</span>
+                    <h2 class="project-title admin-section-title">CURRENT LIST</h2>
+                    
+                    <div class="table-scroll-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>번호</th>
+                                    <th>제목</th>
+                                    <th>분야 / 연도</th>
+                                    <th>관리</th>
+                                </tr>
+                            </thead>
+                            <tbody id="projects-table-body">
+                                <!-- 자바스크립트로 렌더링 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 관리 스크립트 연동 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // -----------------------------------------
+            // 1. 커스텀 마우스 커서 (Lerp)
+            // -----------------------------------------
+            const cursor = document.querySelector('.custom-cursor');
+            let mouseX = 0, mouseY = 0;
+            let cursorX = 0, cursorY = 0;
+            const lerpFactor = 0.1;
+
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            function animateCursor() {
+                cursorX += (mouseX - cursorX) * lerpFactor;
+                cursorY += (mouseY - cursorY) * lerpFactor;
+                cursor.style.transform = `translate3d(${cursorX - 10}px, ${cursorY - 10}px, 0)`;
+                requestAnimationFrame(animateCursor);
+            }
+            requestAnimationFrame(animateCursor);
+
+            // 호버 감지
+            function bindHoverEffects() {
+                const interactiveElements = document.querySelectorAll('a, button, input, textarea');
+                interactiveElements.forEach(el => {
+                    // 이벤트 중복 등록을 방지하기 위해 간단히 정리 후 새로 바인딩
+                    el.removeEventListener('mouseenter', addHoverClass);
+                    el.removeEventListener('mouseleave', removeHoverClass);
+                    el.addEventListener('mouseenter', addHoverClass);
+                    el.addEventListener('mouseleave', removeHoverClass);
+                });
+            }
+
+            function addHoverClass() { cursor.classList.add('hovered'); }
+            function removeHoverClass() { cursor.classList.remove('hovered'); }
+
+            bindHoverEffects();
+
+            // -----------------------------------------
+            // 2. 필름 노이즈(Film Grain) 효과
+            // -----------------------------------------
+            const canvas = document.getElementById('noise-canvas');
+            const ctx = canvas.getContext('2d');
+            let w = canvas.width = window.innerWidth;
+            let h = canvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            });
+
+            function renderNoise() {
+                ctx.clearRect(0, 0, w, h);
+                const idata = ctx.createImageData(w, h);
+                const buffer32 = new Uint32Array(idata.data.buffer);
+                const len = buffer32.length;
+                
+                for (let i = 0; i < len; i += 13) {
+                    if (Math.random() < 0.05) {
+                        buffer32[i] = 0x15ffffff;
+                    }
+                }
+                ctx.putImageData(idata, 0, 0);
+                setTimeout(() => {
+                    requestAnimationFrame(renderNoise);
+                }, 50);
+            }
+            requestAnimationFrame(renderNoise);
+
+            // 3. 테마 반전 및 폰트 변경 토글
+            const btnInvert = document.getElementById('toggle-invert');
+            const btnSerif = document.getElementById('toggle-serif');
+
+            if (localStorage.getItem('theme-invert') === 'true') {
+                document.body.classList.add('invert-mode');
+            }
+            if (localStorage.getItem('font-serif') === 'true') {
+                document.body.classList.add('serif-mode');
+            }
+
+            btnInvert.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.body.classList.toggle('invert-mode');
+                localStorage.setItem('theme-invert', document.body.classList.contains('invert-mode'));
+            });
+
+            btnSerif.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.body.classList.toggle('serif-mode');
+                localStorage.setItem('font-serif', document.body.classList.contains('serif-mode'));
+            });
+
+            // -----------------------------------------
+            // 4. 보안 인증 및 CRUD 데이터 연동 로직
+            // -----------------------------------------
+            const loginPanel = document.getElementById('login-panel');
+            const adminPanel = document.getElementById('admin-panel');
+            const loginForm = document.getElementById('login-form');
+            const loginError = document.getElementById('login-error');
+            const projectForm = document.getElementById('project-form');
+            const projectsTableBody = document.getElementById('projects-table-body');
+            const btnLogout = document.getElementById('btn-logout');
+
+            // 초기 로그인 여부 확인
+            async function checkAuth() {
+                try {
+                    const res = await fetch('/api/check-auth');
+                    const data = await res.json();
+                    
+                    if (data.authenticated) {
+                        showDashboard();
+                    } else {
+                        showLogin();
+                    }
+                } catch (err) {
+                    console.error('인증 체크 에러:', err);
+                    showLogin();
+                }
+            }
+
+            function showLogin() {
+                loginPanel.classList.remove('hidden');
+                adminPanel.classList.add('hidden');
+                bindHoverEffects();
+            }
+
+            function showDashboard() {
+                loginPanel.classList.add('hidden');
+                adminPanel.classList.remove('hidden');
+                loadProjects();
+            }
+
+            // 로그인 제출
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const password = document.getElementById('password').value;
+                loginError.classList.add('hidden');
+
+                try {
+                    const res = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ password })
+                    });
+                    const data = await res.json();
+
+                    if (res.ok && data.success) {
+                        showDashboard();
+                        document.getElementById('password').value = '';
+                    } else {
+                        loginError.classList.remove('hidden');
+                    }
+                } catch (err) {
+                    console.error('로그인 요청 에러:', err);
+                    loginError.classList.remove('hidden');
+                }
+            });
+
+            // 로그아웃
+            btnLogout.addEventListener('click', async () => {
+                try {
+                    const res = await fetch('/api/logout', { method: 'POST' });
+                    if (res.ok) {
+                        showLogin();
+                    }
+                } catch (err) {
+                    console.error('로그아웃 에러:', err);
+                }
+            });
+
+            // 프로젝트 로드 및 테이블 렌더링
+            async function loadProjects() {
+                try {
+                    const res = await fetch('/api/projects');
+                    const projects = await res.json();
+                    
+                    projectsTableBody.innerHTML = '';
+                    
+                    if (projects.length === 0) {
+                        projectsTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="table-empty-message">등록된 프로젝트가 없습니다.</td>
+                        </tr>`;
+                        return;
+                    }
+
+                    projects.forEach((proj, idx) => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${String(idx + 1).padStart(2, '0')}</td>
+                            <td><strong>${proj.title}</strong></td>
+                            <td>${proj.category} (${proj.year})</td>
+                            <td>
+                                <button class="btn-brutal btn-delete btn-delete-row" data-id="${proj.id}">DELETE</button>
+                            </td>
+                        `;
+                        projectsTableBody.appendChild(tr);
+                    });
+
+                    // 삭제 버튼 이벤트 바인딩
+                    document.querySelectorAll('.btn-delete').forEach(btn => {
+                        btn.addEventListener('click', async () => {
+                            const id = btn.getAttribute('data-id');
+                            if (confirm('이 프로젝트를 영구 삭제하시겠습니까?')) {
+                                await deleteProject(id);
+                            }
+                        });
+                    });
+
+                    bindHoverEffects();
+
+                } catch (err) {
+                    console.error('프로젝트 조회 에러:', err);
+                }
+            }
+
+            // 프로젝트 추가 제출
+            projectForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const title = document.getElementById('title').value;
+                const category = document.getElementById('category').value;
+                const imageUrl = document.getElementById('imageUrl').value;
+                const year = document.getElementById('year').value;
+                const client = document.getElementById('client').value;
+                const link = document.getElementById('link').value;
+                const description = document.getElementById('description').value;
+
+                try {
+                    const res = await fetch('/api/projects', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ title, category, imageUrl, year, client, link, description })
+                    });
+                    const data = await res.json();
+
+                    if (res.ok && data.success) {
+                        alert('프로젝트가 성공적으로 등록되었습니다.');
+                        projectForm.reset();
+                        loadProjects();
+                    } else {
+                        alert('등록 실패: ' + (data.message || '오류 발생'));
+                    }
+                } catch (err) {
+                    console.error('등록 요청 에러:', err);
+                    alert('등록 중 에러가 발생했습니다.');
+                }
+            });
+
+            // 프로젝트 삭제 요청
+            async function deleteProject(id) {
+                try {
+                    const res = await fetch(`/api/projects/${id}`, {
+                        method: 'DELETE'
+                    });
+                    const data = await res.json();
+
+                    if (res.ok && data.success) {
+                        loadProjects();
+                    } else {
+                        alert('삭제 실패: ' + (data.message || '오류 발생'));
+                    }
+                } catch (err) {
+                    console.error('삭제 요청 에러:', err);
+                }
+            }
+
+            // 초기 구동
+            checkAuth();
+
+            // 5. 링크 클릭 트랜지션 효과 적용
+            const navigateElements = [
+                document.getElementById('home-link'),
+                document.getElementById('back-link')
+            ];
+            
+            navigateElements.forEach(el => {
+                if (el) {
+                    el.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const target = el.href;
+                        document.body.classList.add('page-exit');
+                        setTimeout(() => {
+                            window.location.href = target;
+                        }, 400);
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
