@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800;900&family=IBM+Plex+Sans+KR:wght@300;400;500;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 
 @font-face {
     font-family: 'GmarketSans';
@@ -44,9 +44,3 @@ body.invert-mode {
     /* 포인트 컬러인 일렉트릭 오렌지(--color-accent)는 반전 모드에서도 브랜드 아이덴티티 유지를 위해 유지 */
 }
 
-/* 서체 토글용 헬퍼 클래스 (Serif 분위기로 완전 토글 가능) */
-body.serif-mode {
-    --font-header: 'Nanum Myeongjo', 'Noto Serif KR', serif;
-    --font-body: 'Noto Serif KR', serif;
-    --font-ui: 'Noto Serif KR', serif;
-}

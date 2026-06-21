@@ -3,10 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>프로젝트 제목 - Project</title>
+    <title>Interactive 3D Art Gallery - Project</title>
+    <link rel="icon" type="image/png" href="/images/logo-icon.png">
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
+    <!-- 초기 테마 반전(Invert) 설정: 첫 렌더링 전 깜빡임 차단 -->
+    <script>
+        if (localStorage.getItem('theme-invert') === 'true') {
+            document.body.classList.add('invert-mode');
+        }
+    </script>
     <!-- 커스텀 커서 -->
     <div class="custom-cursor"></div>
 
@@ -15,11 +22,16 @@
 
     <!-- 상단 내비게이션 바 -->
     <header>
-        <a href="/" class="logo" id="home-link">YOONZDA</a>
+        <a href="/" class="logo" id="home-link">
+            <img src="/images/logo-icon.png" alt="YOONZDA" class="logo-icon">
+            <div class="logo-text-group">
+                <span class="logo-title">yoonzda<span class="logo-dot">.</span></span>
+                <span class="logo-subtitle">Creative Web Developer</span>
+            </div>
+        </a>
         <nav>
             <ul class="nav-links">
                 <li><a href="#" class="nav-link" id="toggle-invert">INVERT</a></li>
-                <li><a href="#" class="nav-link" id="toggle-serif">FONT</a></li>
                 <li><a href="/" class="nav-link" id="back-link">BACK TO LIST</a></li>
             </ul>
         </nav>
@@ -32,24 +44,35 @@
                 <!-- 좌측 정보단 -->
                 <div class="project-info-column">
                     <div>
-                        <span class="project-category">프로젝트 분야</span>
-                        <h1 class="project-title project-detail-title">프로젝트 제목</h1>
-                        <p class="project-desc">프로젝트 설명</p>
+                        <span class="project-category">NO. 03</span>
+                        <h1 class="project-title project-detail-title">Interactive 3D Art Gallery</h1>
+                        <p class="project-desc">Virtual gallery space utilizing custom shader engines, WebGL performance pipelines, and immersive spatial audio mappings for digital artists.</p>
                     </div>
 
                     <!-- 상세 정보 메타 데이터 표 -->
                     <div class="project-meta-grid">
                         <div>
-                            <span class="project-meta-label project-meta-sublabel">CLIENT</span>
-                            <span class="project-meta-value">프로젝트 고객사</span>
+                            <span class="project-meta-label project-meta-sublabel">ROLE</span>
+                            <span class="project-meta-value">3D Interaction Engineer</span>
                         </div>
                         <div>
-                            <span class="project-meta-label project-meta-sublabel">YEAR</span>
-                            <span class="project-meta-value">프로젝트 제작 연도</span>
+                            <span class="project-meta-label project-meta-sublabel">PERIOD</span>
+                            <span class="project-meta-value">2026.04 ~</span>
+                        </div>
+                        
+                        
+                        <div>
+                            <span class="project-meta-label project-meta-sublabel">CATEGORY</span>
+                            <span class="project-meta-value">3D GRAPHICS & EXPERIMENT</span>
+                        </div>
+
+                        <div class="project-meta-full-row">
+                            <span class="project-meta-label project-meta-sublabel">TECH STACK</span>
+                            <span class="project-meta-value">Three.js, WebGL, GLSL Shaders, GSAP</span>
                         </div>
                         <div class="project-link-row">
                             <span class="project-meta-label project-meta-sublabel">LIVE DEMO</span>
-                            <a href="프로젝트 라이브 주소 " target="_blank" class="btn-brutal">
+                            <a href="https://example.com" target="_blank" class="btn-brutal">
                                 VISIT WEBSITE
                             </a>
                         </div>
@@ -59,7 +82,7 @@
                 <!-- 우측 이미지단 -->
                 <div class="project-image-column">
                     <div class="project-image-wrapper">
-                        <img src="프로젝트 이미지?" alt="프로젝트 제목" class="project-image-display" loading="lazy">
+                        <img src="/images/logo.png" alt="Interactive 3D Art Gallery" class="project-image-display" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -124,16 +147,10 @@
             }
             requestAnimationFrame(renderNoise);
 
-            // 3. 테마 반전(Invert) 및 폰트 변경 토글 기능
+            // 3. 테마 반전(Invert) 토글 기능
             const btnInvert = document.getElementById('toggle-invert');
-            const btnSerif = document.getElementById('toggle-serif');
 
-            if (localStorage.getItem('theme-invert') === 'true') {
-                document.body.classList.add('invert-mode');
-            }
-            if (localStorage.getItem('font-serif') === 'true') {
-                document.body.classList.add('serif-mode');
-            }
+
 
             btnInvert.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -141,30 +158,6 @@
                 localStorage.setItem('theme-invert', document.body.classList.contains('invert-mode'));
             });
 
-            btnSerif.addEventListener('click', (e) => {
-                e.preventDefault();
-                document.body.classList.toggle('serif-mode');
-                localStorage.setItem('font-serif', document.body.classList.contains('serif-mode'));
-            });
-
-            // 4. 페이지 뒤로가기 / 홈 이동 시 트랜지션
-            const navigateElements = [
-                document.getElementById('home-link'),
-                document.getElementById('back-link')
-            ];
-            
-            navigateElements.forEach(el => {
-                if (el) {
-                    el.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        const target = el.href;
-                        document.body.classList.add('page-exit');
-                        setTimeout(() => {
-                            window.location.href = target;
-                        }, 400);
-                    });
-                }
-            });
         });
     </script>
 </body>

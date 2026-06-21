@@ -4,9 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PORTFOLIO</title>
+    <link rel="icon" type="image/png" href="/images/logo-icon.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- 초기 테마 반전(Invert) 설정: 첫 렌더링 전 깜빡임 차단 -->
+    <script>
+        if (localStorage.getItem('theme-invert') === 'true') {
+            document.body.classList.add('invert-mode');
+        }
+    </script>
     <!-- 커스텀 커서 -->
     <div class="custom-cursor"></div>
 
@@ -15,12 +22,17 @@
 
     <!-- 상단 내비게이션 바 -->
     <header>
-        <a href="/" class="logo">YOONZDA</a>
+        <a href="/" class="logo" id="home-link">
+            <img src="/images/logo-icon.png" alt="YOONZDA" class="logo-icon">
+            <div class="logo-text-group">
+                <span class="logo-title">yoonzda<span class="logo-dot">.</span></span>
+                <span class="logo-subtitle">Creative Web Developer</span>
+            </div>
+        </a>
         <nav>
             <ul class="nav-links">
                 <li><a href="#" class="nav-link" id="toggle-invert">INVERT</a></li>
-                <li><a href="#" class="nav-link" id="toggle-serif">FONT</a></li>
-                <li><a href="/list.html" class="nav-link">MANAGE</a></li>
+                <li><a href="/list.html" class="nav-link">프로젝트 관리</a></li>
             </ul>
         </nav>
     </header>
@@ -28,24 +40,75 @@
     <!-- 메인 스냅 스크롤 컨테이너 -->
     <div class="scroll-container">
         
-            <section class="project-section" id="section-project_1781970399891">
+            <section class="project-section" id="section-project_3">
                 <div class="grid-container project-card-container">
-                    <header class="project-meta-header project-card-header">
-                        <span class="project-meta-item"><span class="project-meta-label">NO.</span>01</span>
-                        <span class="project-meta-item"><span class="project-meta-label">YEAR</span>프로젝트 제작 연도</span>
-                    </header>
                     <div class="project-card-body">
-                        <span class="project-category">프로젝트 분야</span>
+                        <span class="project-category">NO. 01</span>
                         <div class="reveal-wrapper">
                             <h2 class="project-title reveal-inner">
-                                <a href="projects/project_1781970399891.html" class="project-link" data-image="프로젝트 이미지?">프로젝트 제목</a>
+                                <a href="projects/project_3.html" class="project-link" data-image="/images/logo.png">윤지서점</a>
                             </h2>
                         </div>
-                        <p class="project-desc project-card-desc">프로젝트 설명</p>
+                        <p class="project-desc project-card-desc">프론트엔드 개발 과정에서 Antigravity를 활용하여 코드 구조 설계, 반복 작업 자동화를 수행했습니다.
+기획부터 UI/UX 디자인, 프론트엔드 개발 및 배포까지 전 과정 단독 수행</p>
                     </div>
                     <footer class="project-footer project-card-footer">
-                        <span class="project-meta-item"><span class="project-meta-label">CLIENT</span>프로젝트 고객사</span>
-                        <a href="projects/project_1781970399891.html" class="btn-brutal project-link" data-image="프로젝트 이미지?">VIEW PROJECT</a>
+                        <div class="project-meta-group" style="display: flex; gap: 2rem;">
+                            <span class="project-meta-item"><span class="project-meta-label">PERIOD</span>2026.09 - 2026.05</span>
+                            <span class="project-meta-item"><span class="project-meta-label">CONTRIBUTION</span>100%</span>
+                        </div>
+                        <div class="project-actions-group" style="display: flex; gap: 1rem;">
+                            <a href="https://yoonzda-record.vercel.app/" target="_blank" class="btn-brutal btn-live-site">운영 사이트</a>
+                            <a href="projects/project_3.html" class="btn-brutal btn-detail-view project-link" data-image="/images/logo.png">상세보기</a>
+                        </div>
+                    </footer>
+                </div>
+            </section>
+
+            <section class="project-section" id="section-project_1">
+                <div class="grid-container project-card-container">
+                    <div class="project-card-body">
+                        <span class="project-category">NO. 02</span>
+                        <div class="reveal-wrapper">
+                            <h2 class="project-title reveal-inner">
+                                <a href="projects/project_1.html" class="project-link" data-image="/images/logo.png">Aether Web Platform</a>
+                            </h2>
+                        </div>
+                        <p class="project-desc project-card-desc">Next-generation cloud workspace offering automated layout compiling, interactive visual flow charts, and real-time multiplayer editing using WebSockets.</p>
+                    </div>
+                    <footer class="project-footer project-card-footer">
+                        <div class="project-meta-group" style="display: flex; gap: 2rem;">
+                            <span class="project-meta-item"><span class="project-meta-label">PERIOD</span>2026.01 - 2026.03</span>
+                            <span class="project-meta-item"><span class="project-meta-label">CONTRIBUTION</span>100%</span>
+                        </div>
+                        <div class="project-actions-group" style="display: flex; gap: 1rem;">
+                            <a href="https://example.com" target="_blank" class="btn-brutal btn-live-site">운영 사이트</a>
+                            <a href="projects/project_1.html" class="btn-brutal btn-detail-view project-link" data-image="/images/logo.png">상세보기</a>
+                        </div>
+                    </footer>
+                </div>
+            </section>
+
+            <section class="project-section" id="section-project_2">
+                <div class="grid-container project-card-container">
+                    <div class="project-card-body">
+                        <span class="project-category">NO. 03</span>
+                        <div class="reveal-wrapper">
+                            <h2 class="project-title reveal-inner">
+                                <a href="projects/project_2.html" class="project-link" data-image="/images/logo.png">Interactive 3D Art Gallery</a>
+                            </h2>
+                        </div>
+                        <p class="project-desc project-card-desc">Virtual gallery space utilizing custom shader engines, WebGL performance pipelines, and immersive spatial audio mappings for digital artists.</p>
+                    </div>
+                    <footer class="project-footer project-card-footer">
+                        <div class="project-meta-group" style="display: flex; gap: 2rem;">
+                            <span class="project-meta-item"><span class="project-meta-label">PERIOD</span>2026.04 ~</span>
+                            <span class="project-meta-item"><span class="project-meta-label">CONTRIBUTION</span>85%</span>
+                        </div>
+                        <div class="project-actions-group" style="display: flex; gap: 1rem;">
+                            <a href="https://example.com" target="_blank" class="btn-brutal btn-live-site">운영 사이트</a>
+                            <a href="projects/project_2.html" class="btn-brutal btn-detail-view project-link" data-image="/images/logo.png">상세보기</a>
+                        </div>
                     </footer>
                 </div>
             </section>
@@ -55,6 +118,17 @@
     <!-- 핵심 모션 및 인터랙션 자바스크립트 -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // -----------------------------------------
+            // 0. 로컬 환경이 아닐 경우 관리자 링크(MANAGE) 숨기기
+            // -----------------------------------------
+            if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+                document.querySelectorAll('a[href="/list.html"], a[href="list.html"]').forEach(link => {
+                    const li = link.closest('li');
+                    if (li) li.style.display = 'none';
+                    else link.style.display = 'none';
+                });
+            }
+
             // -----------------------------------------
             // 1. 커스텀 마우스 커서 (Lerp + requestAnimationFrame)
             // -----------------------------------------
@@ -150,18 +224,11 @@
             requestAnimationFrame(renderNoise);
 
             // -----------------------------------------
-            // 4. 테마 반전(Invert) 및 폰트 변경 토글 기능
+            // 4. 테마 반전(Invert) 토글 기능
             // -----------------------------------------
             const btnInvert = document.getElementById('toggle-invert');
-            const btnSerif = document.getElementById('toggle-serif');
 
-            // 초기 로컬 스토리지 값 확인
-            if (localStorage.getItem('theme-invert') === 'true') {
-                document.body.classList.add('invert-mode');
-            }
-            if (localStorage.getItem('font-serif') === 'true') {
-                document.body.classList.add('serif-mode');
-            }
+
 
             btnInvert.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -169,25 +236,6 @@
                 localStorage.setItem('theme-invert', document.body.classList.contains('invert-mode'));
             });
 
-            btnSerif.addEventListener('click', (e) => {
-                e.preventDefault();
-                document.body.classList.toggle('serif-mode');
-                localStorage.setItem('font-serif', document.body.classList.contains('serif-mode'));
-            });
-
-            // -----------------------------------------
-            // 5. 페이지 전환 (Page Transition / No overlay)
-            // -----------------------------------------
-            document.querySelectorAll('a.project-link').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const target = link.href;
-                    document.body.classList.add('page-exit');
-                    setTimeout(() => {
-                        window.location.href = target;
-                    }, 400); // animations.css 트랜지션 타임 맞춤
-                });
-            });
         });
     </script>
 </body>

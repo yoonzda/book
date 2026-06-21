@@ -86,12 +86,4 @@
     object-fit: cover;
 }
 
-/* 페이지 전체 무중단 전환 트랜지션 클래스 */
-body {
-    opacity: 1;
-    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
 
-body.page-exit {
-    opacity: 0;
-}

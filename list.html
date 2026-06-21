@@ -3,10 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MANAGE - PORTFOLIO</title>
+    <title>프로젝트 관리 - YOONZDA</title>
+    <link rel="icon" type="image/png" href="/images/logo-icon.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- 초기 테마 반전(Invert) 설정: 첫 렌더링 전 깜빡임 차단 -->
+    <script>
+        if (localStorage.getItem('theme-invert') === 'true') {
+            document.body.classList.add('invert-mode');
+        }
+    </script>
     <!-- 커스텀 커서 -->
     <div class="custom-cursor"></div>
 
@@ -15,12 +22,17 @@
 
     <!-- 상단 내비게이션 바 -->
     <header>
-        <a href="/" class="logo" id="home-link">YOONZDA</a>
+        <a href="/" class="logo" id="home-link">
+            <img src="/images/logo-icon.png" alt="YOONZDA" class="logo-icon">
+            <div class="logo-text-group">
+                <span class="logo-title">yoonzda<span class="logo-dot">.</span></span>
+                <span class="logo-subtitle">Creative Web Developer</span>
+            </div>
+        </a>
         <nav>
             <ul class="nav-links">
                 <li><a href="#" class="nav-link" id="toggle-invert">INVERT</a></li>
-                <li><a href="#" class="nav-link" id="toggle-serif">FONT</a></li>
-                <li><a href="/" class="nav-link" id="back-link">BACK TO SITE</a></li>
+                <li><a href="/" class="nav-link" id="back-link">GO TO SITE</a></li>
             </ul>
         </nav>
     </header>
@@ -28,99 +40,37 @@
     <!-- 메인 컨텐츠 영역 -->
     <main class="main-content">
         
-        <!-- 1단계: 비밀번호 로그인 화면 -->
-        <div id="login-panel" class="auth-panel-wrapper">
-            <div class="auth-card">
-                <span class="project-category">ADMIN ACCESS</span>
-                <h1 class="project-title auth-title">LOGIN</h1>
-                <form id="login-form">
-                    <div class="form-group">
-                        <label for="password" class="label-brutal">PASSWORD</label>
-                        <input type="password" id="password" class="input-brutal" placeholder="ENTER ADMIN PASSWORD" required autocomplete="current-password">
-                    </div>
-                    <div id="login-error" class="project-category text-accent hidden">비밀번호가 올바르지 않습니다.</div>
-                    <button type="submit" class="btn-brutal btn-brutal-full">ACCESS DASHBOARD</button>
-                </form>
-            </div>
-        </div>
-
-        <!-- 2단계: 프로젝트 관리 대시보드 (기본 비활성) -->
-        <div id="admin-panel" class="admin-panel-container hidden">
+        <!-- 프로젝트 관리 대시보드 -->
+        <div id="admin-panel" class="admin-panel-container">
             <div class="admin-title-row">
                 <div>
                     <span class="project-category">WORKSPACE</span>
-                    <h1 class="project-title admin-header-title">PROJECT MANAGER</h1>
+                    <h1 class="project-title admin-header-title">프로젝트 목록</h1>
                 </div>
-                <button id="btn-logout" class="btn-brutal">LOGOUT</button>
+                <div class="admin-action-group">
+                    <a href="/form.html" class="btn-add-plus" id="btn-add-proj-nav" aria-label="새 프로젝트 등록">
+                        <span class="plus-icon">+</span>
+                        <span class="plus-text">프로젝트 등록</span>
+                    </a>
+                </div>
             </div>
 
-            <div class="grid-container">
-                <!-- 좌측 컬럼: 프로젝트 추가 폼 -->
-                <div class="col-5">
-                    <div class="form-container-card">
-                        <span class="project-category">NEW ENTRY</span>
-                        <h2 class="project-title admin-section-title">ADD PROJECT</h2>
-                        
-                        <form id="project-form">
-                            <div class="form-group">
-                                <label for="title" class="label-brutal">PROJECT TITLE (제목)</label>
-                                <input type="text" id="title" class="input-brutal" placeholder="예: BRAND IDENTITY 2026" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="category" class="label-brutal">CATEGORY (분야)</label>
-                                <input type="text" id="category" class="input-brutal" placeholder="예: IDENTITY, WEB, editorial" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="imageUrl" class="label-brutal">IMAGE URL (이미지 경로)</label>
-                                <input type="text" id="imageUrl" class="input-brutal" placeholder="예: https://images.unsplash.com/... 또는 /public/uploads/file.jpg" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="year" class="label-brutal">YEAR (제작 연도)</label>
-                                <input type="text" id="year" class="input-brutal" placeholder="예: 2026" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="client" class="label-brutal">CLIENT (고객사 - 생략 가능)</label>
-                                <input type="text" id="client" class="input-brutal" placeholder="예: GOOGLE KOREA">
-                            </div>
-                            <div class="form-group">
-                                <label for="link" class="label-brutal">LIVE LINK (라이브 주소 - 생략 가능)</label>
-                                <input type="text" id="link" class="input-brutal" placeholder="예: https://example.com">
-                            </div>
-                            <div class="form-group">
-                                <label for="description" class="label-brutal">DESCRIPTION (설명)</label>
-                                <textarea id="description" class="textarea-brutal" placeholder="프로젝트 기획 배경 및 상세 내용을 작성해 주세요." required></textarea>
-                            </div>
-                            <button type="submit" class="btn-brutal btn-brutal-full">SAVE PROJECT</button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- 우측 컬럼: 프로젝트 목록 및 삭제 제어 -->
-                <div class="col-7">
-                    <span class="project-category">ENTRIES DATABASE</span>
-                    <h2 class="project-title admin-section-title">CURRENT LIST</h2>
-                    
-                    <div class="table-scroll-wrapper">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>번호</th>
-                                    <th>제목</th>
-                                    <th>분야 / 연도</th>
-                                    <th>관리</th>
-                                </tr>
-                            </thead>
-                            <tbody id="projects-table-body">
-                                <!-- 자바스크립트로 렌더링 -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <!-- 프로젝트 목록 카드 리스트 -->
+            <div class="admin-cards-list" id="projects-cards-list">
+                <!-- 자바스크립트로 카드 형태 렌더링 -->
             </div>
         </div>
     </main>
 
-    <!-- 관리 스크립트 연동 -->
+    <!-- 하단 플로팅 액션 바 -->
+    <div class="floating-action-bar" id="reorder-floating-bar">
+        <button id="btn-reorder-start" class="btn-floating-pill">
+            <span class="btn-dot-glow"></span>
+            <span id="reorder-btn-text">순서 변경</span>
+        </button>
+    </div>
+
+    <!-- 관리 스크립트 -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // -----------------------------------------
@@ -146,9 +96,8 @@
 
             // 호버 감지
             function bindHoverEffects() {
-                const interactiveElements = document.querySelectorAll('a, button, input, textarea');
+                const interactiveElements = document.querySelectorAll('a, button');
                 interactiveElements.forEach(el => {
-                    // 이벤트 중복 등록을 방지하기 위해 간단히 정리 후 새로 바인딩
                     el.removeEventListener('mouseenter', addHoverClass);
                     el.removeEventListener('mouseleave', removeHoverClass);
                     el.addEventListener('mouseenter', addHoverClass);
@@ -192,16 +141,10 @@
             }
             requestAnimationFrame(renderNoise);
 
-            // 3. 테마 반전 및 폰트 변경 토글
+            // 3. 테마 반전 토글
             const btnInvert = document.getElementById('toggle-invert');
-            const btnSerif = document.getElementById('toggle-serif');
 
-            if (localStorage.getItem('theme-invert') === 'true') {
-                document.body.classList.add('invert-mode');
-            }
-            if (localStorage.getItem('font-serif') === 'true') {
-                document.body.classList.add('serif-mode');
-            }
+
 
             btnInvert.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -209,122 +152,88 @@
                 localStorage.setItem('theme-invert', document.body.classList.contains('invert-mode'));
             });
 
-            btnSerif.addEventListener('click', (e) => {
-                e.preventDefault();
-                document.body.classList.toggle('serif-mode');
-                localStorage.setItem('font-serif', document.body.classList.contains('serif-mode'));
-            });
-
             // -----------------------------------------
-            // 4. 보안 인증 및 CRUD 데이터 연동 로직
+            // 4. 프로젝트 목록 조회, 카드 렌더링 및 드래그 앤 드롭 기능
             // -----------------------------------------
-            const loginPanel = document.getElementById('login-panel');
-            const adminPanel = document.getElementById('admin-panel');
-            const loginForm = document.getElementById('login-form');
-            const loginError = document.getElementById('login-error');
-            const projectForm = document.getElementById('project-form');
-            const projectsTableBody = document.getElementById('projects-table-body');
-            const btnLogout = document.getElementById('btn-logout');
+            const projectsCardsList = document.getElementById('projects-cards-list');
 
-            // 초기 로그인 여부 확인
-            async function checkAuth() {
-                try {
-                    const res = await fetch('/api/check-auth');
-                    const data = await res.json();
-                    
-                    if (data.authenticated) {
-                        showDashboard();
-                    } else {
-                        showLogin();
-                    }
-                } catch (err) {
-                    console.error('인증 체크 에러:', err);
-                    showLogin();
+            // 날짜 포맷터
+            const formatProjectDateLocal = (proj) => {
+                const start = proj.startDate || '';
+                const end = proj.endDate || '';
+                const mode = proj.dateDisplayMode || 'period';
+                const formatDots = (s) => s.replace(/-/g, '.');
+
+                if (mode === 'period') {
+                    const formattedStart = formatDots(start);
+                    const formattedEnd = (end.toLowerCase() === 'ongoing' || end === '진행 중' || !end) ? 'ONGOING' : formatDots(end);
+                    return `${formattedStart} - ${formattedEnd}`;
+                } else if (mode === 'ongoing') {
+                    return `${formatDots(start)} ~`;
+                } else {
+                    const target = (end && end !== '진행 중' && end.toLowerCase() !== 'ongoing') ? end : start;
+                    if (!target) return '';
+                    const separator = target.includes('.') ? '.' : '-';
+                    const parts = target.split(separator);
+                    if (parts.length >= 2) return `${parts[0]}.${parts[1]}`;
+                    return formatDots(target);
                 }
-            }
+            };
 
-            function showLogin() {
-                loginPanel.classList.remove('hidden');
-                adminPanel.classList.add('hidden');
-                bindHoverEffects();
-            }
-
-            function showDashboard() {
-                loginPanel.classList.add('hidden');
-                adminPanel.classList.remove('hidden');
-                loadProjects();
-            }
-
-            // 로그인 제출
-            loginForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const password = document.getElementById('password').value;
-                loginError.classList.add('hidden');
-
-                try {
-                    const res = await fetch('/api/login', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ password })
-                    });
-                    const data = await res.json();
-
-                    if (res.ok && data.success) {
-                        showDashboard();
-                        document.getElementById('password').value = '';
-                    } else {
-                        loginError.classList.remove('hidden');
-                    }
-                } catch (err) {
-                    console.error('로그인 요청 에러:', err);
-                    loginError.classList.remove('hidden');
-                }
-            });
-
-            // 로그아웃
-            btnLogout.addEventListener('click', async () => {
-                try {
-                    const res = await fetch('/api/logout', { method: 'POST' });
-                    if (res.ok) {
-                        showLogin();
-                    }
-                } catch (err) {
-                    console.error('로그아웃 에러:', err);
-                }
-            });
-
-            // 프로젝트 로드 및 테이블 렌더링
+            // 프로젝트 로드 및 카드 렌더링
             async function loadProjects() {
                 try {
                     const res = await fetch('/api/projects');
                     const projects = await res.json();
                     
-                    projectsTableBody.innerHTML = '';
+                    projectsCardsList.innerHTML = '';
                     
                     if (projects.length === 0) {
-                        projectsTableBody.innerHTML = `
-                        <tr>
-                            <td colspan="4" class="table-empty-message">등록된 프로젝트가 없습니다.</td>
-                        </tr>`;
+                        projectsCardsList.innerHTML = `
+                        <div class="table-empty-message">등록된 프로젝트가 없습니다.</div>`;
                         return;
                     }
 
                     projects.forEach((proj, idx) => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${String(idx + 1).padStart(2, '0')}</td>
-                            <td><strong>${proj.title}</strong></td>
-                            <td>${proj.category} (${proj.year})</td>
-                            <td>
-                                <button class="btn-brutal btn-delete btn-delete-row" data-id="${proj.id}">DELETE</button>
-                            </td>
+                        const card = document.createElement('div');
+                        card.className = 'admin-project-card';
+                        card.setAttribute('draggable', 'false');
+                        card.setAttribute('data-id', proj.id);
+                        
+                        const formattedDate = formatProjectDateLocal(proj);
+                        
+                        card.innerHTML = `
+                            <div class="card-left">
+                                <button class="btn-drag-handle" title="드래그하여 순서 변경">⠿</button>
+                                <span class="card-num">${String(idx + 1).padStart(2, '0')}</span>
+                                <div class="card-info">
+                                    <h3 class="card-title">${proj.title}</h3>
+                                    <span class="card-date">${formattedDate}</span>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn-simple-action btn-delete-simple" data-id="${proj.id}">삭제</button>
+                            </div>
                         `;
-                        projectsTableBody.appendChild(tr);
+
+                        card.addEventListener('click', (e) => {
+                            if (isReorderMode) return;
+
+                            // 삭제 버튼이나 드래그 핸들 조작 시 이동 차단
+                            if (e.target.closest('.btn-delete-simple') || e.target.closest('.btn-drag-handle')) {
+                                return;
+                            }
+
+                            window.location.href = `/form.html?id=${proj.id}`;
+                        });
+
+                        projectsCardsList.appendChild(card);
                     });
 
                     // 삭제 버튼 이벤트 바인딩
-                    document.querySelectorAll('.btn-delete').forEach(btn => {
-                        btn.addEventListener('click', async () => {
+                    document.querySelectorAll('.btn-delete-simple').forEach(btn => {
+                        btn.addEventListener('click', async (e) => {
+                            e.stopPropagation(); // 카드 클릭 전파 방지
                             const id = btn.getAttribute('data-id');
                             if (confirm('이 프로젝트를 영구 삭제하시겠습니까?')) {
                                 await deleteProject(id);
@@ -332,45 +241,14 @@
                         });
                     });
 
+                    // 드래그 앤 드롭 바인딩
+                    initDragAndDrop();
                     bindHoverEffects();
 
                 } catch (err) {
                     console.error('프로젝트 조회 에러:', err);
                 }
             }
-
-            // 프로젝트 추가 제출
-            projectForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                const title = document.getElementById('title').value;
-                const category = document.getElementById('category').value;
-                const imageUrl = document.getElementById('imageUrl').value;
-                const year = document.getElementById('year').value;
-                const client = document.getElementById('client').value;
-                const link = document.getElementById('link').value;
-                const description = document.getElementById('description').value;
-
-                try {
-                    const res = await fetch('/api/projects', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ title, category, imageUrl, year, client, link, description })
-                    });
-                    const data = await res.json();
-
-                    if (res.ok && data.success) {
-                        alert('프로젝트가 성공적으로 등록되었습니다.');
-                        projectForm.reset();
-                        loadProjects();
-                    } else {
-                        alert('등록 실패: ' + (data.message || '오류 발생'));
-                    }
-                } catch (err) {
-                    console.error('등록 요청 에러:', err);
-                    alert('등록 중 에러가 발생했습니다.');
-                }
-            });
 
             // 프로젝트 삭제 요청
             async function deleteProject(id) {
@@ -390,27 +268,164 @@
                 }
             }
 
-            // 초기 구동
-            checkAuth();
+            // 드래그 앤 드롭 정렬 상태 관리
+            let dragSourceEl = null;
+            let isHandleMouseDown = false;
+            let isReorderMode = false;
+            let originalCardOrder = []; // 취소 시 복구할 원본 순서 (ID 목록)
 
-            // 5. 링크 클릭 트랜지션 효과 적용
-            const navigateElements = [
-                document.getElementById('home-link'),
-                document.getElementById('back-link')
-            ];
-            
-            navigateElements.forEach(el => {
-                if (el) {
-                    el.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        const target = el.href;
-                        document.body.classList.add('page-exit');
-                        setTimeout(() => {
-                            window.location.href = target;
-                        }, 400);
-                    });
+            // 마우스/터치가 어디서든 떼어졌을 때 드래그 핸들 상태 해제 (상태 고정 방지)
+            document.addEventListener('mouseup', () => { isHandleMouseDown = false; });
+            document.addEventListener('touchend', () => { isHandleMouseDown = false; });
+
+            const btnReorderStart = document.getElementById('btn-reorder-start');
+            const reorderBtnText = document.getElementById('reorder-btn-text');
+            const btnAddProjNav = document.getElementById('btn-add-proj-nav');
+
+            btnReorderStart.addEventListener('click', async () => {
+                if (!isReorderMode) {
+                    isReorderMode = true;
+                    projectsCardsList.classList.add('reorder-mode');
+                    
+                    // 원본 순서 임시 저장 (ID 목록)
+                    originalCardOrder = Array.from(projectsCardsList.children).map(card => card.getAttribute('data-id'));
+                    
+                    setCardsDraggable(true);
+                    
+                    // 프로젝트 등록 버튼 숨김
+                    btnAddProjNav.classList.add('hidden');
+                    
+                    // 텍스트 전환
+                    reorderBtnText.innerText = '변경 완료';
+                } else {
+                    // 새로운 순서 최종 저장
+                    await saveNewOrder();
+                    
+                    isReorderMode = false;
+                    projectsCardsList.classList.remove('reorder-mode');
+                    
+                    setCardsDraggable(false);
+                    
+                    // 프로젝트 등록 버튼 복구
+                    btnAddProjNav.classList.remove('hidden');
+                    
+                    // 텍스트 복구
+                    reorderBtnText.innerText = '순서 변경';
                 }
             });
+
+            function setCardsDraggable(draggable) {
+                const cards = document.querySelectorAll('.admin-project-card');
+                cards.forEach(card => {
+                    card.setAttribute('draggable', draggable ? 'true' : 'false');
+                });
+            }
+
+            function handleDragStart(e) {
+                if (!isHandleMouseDown || !isReorderMode) {
+                    e.preventDefault();
+                    return;
+                }
+                this.classList.add('dragging');
+                dragSourceEl = this;
+                e.dataTransfer.effectAllowed = 'move';
+            }
+
+            function handleDragOver(e) {
+                if (e.preventDefault) {
+                    e.preventDefault();
+                }
+                e.dataTransfer.dropEffect = 'move';
+                if (this !== dragSourceEl) {
+                    this.classList.add('drag-over');
+                }
+                return false;
+            }
+
+            function handleDragLeave(e) {
+                this.classList.remove('drag-over');
+            }
+
+            function handleDrop(e) {
+                if (e.stopPropagation) {
+                    e.stopPropagation();
+                }
+                this.classList.remove('drag-over');
+                
+                if (dragSourceEl !== this) {
+                    const list = document.getElementById('projects-cards-list');
+                    const cards = Array.from(list.children);
+                    const sourceIdx = cards.indexOf(dragSourceEl);
+                    const targetIdx = cards.indexOf(this);
+                    
+                    if (sourceIdx < targetIdx) {
+                        list.insertBefore(dragSourceEl, this.nextSibling);
+                    } else {
+                        list.insertBefore(dragSourceEl, this);
+                    }
+                    
+                    // 번호 라벨만 화면에 즉시 순서대로 재배치
+                    Array.from(list.children).forEach((card, idx) => {
+                        card.querySelector('.card-num').innerText = String(idx + 1).padStart(2, '0');
+                    });
+                }
+                return false;
+            }
+
+            function handleDragEnd(e) {
+                this.classList.remove('dragging');
+                const cards = document.querySelectorAll('.admin-project-card');
+                cards.forEach(card => card.classList.remove('drag-over'));
+                isHandleMouseDown = false; // 드래그 완료 시 핸들 상태 초기화
+            }
+
+            async function saveNewOrder() {
+                const list = document.getElementById('projects-cards-list');
+                const cardIds = Array.from(list.children).map(card => card.getAttribute('data-id'));
+                
+                try {
+                    const res = await fetch('/api/projects/reorder', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ order: cardIds })
+                    });
+                    const data = await res.json();
+                    if (!res.ok || !data.success) {
+                        alert('순서 저장 실패: ' + (data.message || '오류 발생'));
+                    } else {
+                        // 카드 번호 라벨 최종 확인 재배치
+                        Array.from(list.children).forEach((card, idx) => {
+                            card.querySelector('.card-num').innerText = String(idx + 1).padStart(2, '0');
+                        });
+                    }
+                } catch (err) {
+                    console.error('순서 저장 에러:', err);
+                }
+            }
+
+            function initDragAndDrop() {
+                const cards = document.querySelectorAll('.admin-project-card');
+                cards.forEach(card => {
+                    card.addEventListener('dragstart', handleDragStart);
+                    card.addEventListener('dragover', handleDragOver);
+                    card.addEventListener('dragleave', handleDragLeave);
+                    card.addEventListener('drop', handleDrop);
+                    card.addEventListener('dragend', handleDragEnd);
+                    
+                    const handle = card.querySelector('.btn-drag-handle');
+                    if (handle) {
+                        handle.addEventListener('mousedown', () => { isHandleMouseDown = true; });
+                        handle.addEventListener('mouseup', () => { isHandleMouseDown = false; });
+                        handle.addEventListener('touchstart', () => { isHandleMouseDown = true; });
+                        handle.addEventListener('touchend', () => { isHandleMouseDown = false; });
+                    }
+                });
+            }
+
+            // 초기 구동
+            loadProjects();
+
+
         });
     </script>
 </body>

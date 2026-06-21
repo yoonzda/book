@@ -1,35 +1,14 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const crypto = require('crypto');
-const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin1234';
-
-// 암호화 SHA-256 해시 함수
-const getHash = (text) => {
-    return crypto.createHash('sha256').update(text).digest('hex');
-};
-
-const ADMIN_HASH = getHash(ADMIN_PASSWORD);
 
 // 미들웨어 설정
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-
-// 보안 검증 미들웨어
-const authenticate = (req, res, next) => {
-    const token = req.cookies.admin_token;
-    if (token === ADMIN_HASH) {
-        next();
-    } else {
-        res.status(401).json({ success: false, message: '인증되지 않은 사용자입니다.' });
-    }
-};
 
 // 파일 도우미 함수들
 const readProjectsData = () => {
@@ -54,6 +33,37 @@ const writeProjectsData = (data) => {
     } catch (err) {
         console.error('데이터 쓰기 실패:', err);
         return false;
+    }
+};
+
+// --- 날짜 포맷팅 도우미 함수 ---
+const formatProjectDate = (proj) => {
+    const start = proj.startDate || '';
+    const end = proj.endDate || '';
+    const mode = proj.dateDisplayMode || 'period';
+
+    const formatDots = (str) => {
+        if (!str) return '';
+        return str.replace(/-/g, '.');
+    };
+
+    if (mode === 'period') {
+        const formattedStart = formatDots(start);
+        const formattedEnd = (end.toLowerCase() === 'ongoing' || end === '진행 중' || !end)
+            ? 'ONGOING'
+            : formatDots(end);
+        return `${formattedStart} - ${formattedEnd}`;
+    } else if (mode === 'ongoing') {
+        return `${formatDots(start)} ~`;
+    } else {
+        const targetDate = (end && end !== '진행 중' && end.toLowerCase() !== 'ongoing') ? end : start;
+        if (!targetDate) return '';
+        const separator = targetDate.includes('.') ? '.' : '-';
+        const parts = targetDate.split(separator);
+        if (parts.length >= 2) {
+            return `${parts[0]}.${parts[1]}`;
+        }
+        return formatDots(targetDate);
     }
 };
 
@@ -85,15 +95,12 @@ const compileStaticPages = () => {
     } else {
         projects.forEach((proj, idx) => {
             const num = String(idx + 1).padStart(2, '0');
+            const formattedDate = formatProjectDate(proj);
             projectsListMarkup += `
             <section class="project-section" id="section-${proj.id}">
                 <div class="grid-container project-card-container">
-                    <header class="project-meta-header project-card-header">
-                        <span class="project-meta-item"><span class="project-meta-label">NO.</span>${num}</span>
-                        <span class="project-meta-item"><span class="project-meta-label">YEAR</span>${proj.year}</span>
-                    </header>
                     <div class="project-card-body">
-                        <span class="project-category">${proj.category}</span>
+                        <span class="project-category">NO. ${num}</span>
                         <div class="reveal-wrapper">
                             <h2 class="project-title reveal-inner">
                                 <a href="projects/${proj.id}.html" class="project-link" data-image="${proj.imageUrl}">${proj.title}</a>
@@ -102,8 +109,14 @@ const compileStaticPages = () => {
                         <p class="project-desc project-card-desc">${proj.description}</p>
                     </div>
                     <footer class="project-footer project-card-footer">
-                        <span class="project-meta-item"><span class="project-meta-label">CLIENT</span>${proj.client || 'Personal'}</span>
-                        <a href="projects/${proj.id}.html" class="btn-brutal project-link" data-image="${proj.imageUrl}">VIEW PROJECT</a>
+                        <div class="project-meta-group" style="display: flex; gap: 2rem;">
+                            <span class="project-meta-item"><span class="project-meta-label">PERIOD</span>${formattedDate}</span>
+                            <span class="project-meta-item"><span class="project-meta-label">CONTRIBUTION</span>${proj.contribution || '100%'}</span>
+                        </div>
+                        <div class="project-actions-group" style="display: flex; gap: 1rem;">
+                            ${proj.link ? `<a href="${proj.link}" target="_blank" class="btn-brutal btn-live-site">운영 사이트</a>` : ''}
+                            <a href="projects/${proj.id}.html" class="btn-brutal btn-detail-view project-link" data-image="${proj.imageUrl}">상세보기</a>
+                        </div>
                     </footer>
                 </div>
             </section>\n`;
@@ -143,15 +156,24 @@ const compileStaticPages = () => {
         console.error('프로젝트 디렉토리 정리 오류:', err);
     }
 
-    // 각 프로젝트별 개별 HTML 생성
-    projects.forEach((proj) => {
+    projects.forEach((proj, idx) => {
+        const num = String(idx + 1).padStart(2, '0');
+        const formattedDate = formatProjectDate(proj);
+        const categoryMetaHtml = proj.category ? `
+                        <div>
+                            <span class="project-meta-label project-meta-sublabel">CATEGORY</span>
+                            <span class="project-meta-value">${proj.category}</span>
+                        </div>` : '';
         let html = projectTemplate
             .replace(/{{TITLE}}/g, proj.title)
-            .replace(/{{CATEGORY}}/g, proj.category)
+            .replace(/{{PROJECT_NUM}}/g, num)
+            .replace(/{{CATEGORY_META_HTML}}/g, categoryMetaHtml)
             .replace(/{{DESCRIPTION}}/g, proj.description)
             .replace(/{{IMAGE}}/g, proj.imageUrl)
-            .replace(/{{YEAR}}/g, proj.year)
-            .replace(/{{CLIENT}}/g, proj.client || 'Personal')
+            .replace(/{{PERIOD}}/g, formattedDate)
+            .replace(/{{CONTRIBUTION}}/g, proj.contribution || '100%')
+            .replace(/{{ROLE}}/g, proj.role || 'Personal')
+            .replace(/{{TECH_STACK}}/g, proj.techStack || 'None')
             .replace(/{{LINK}}/g, proj.link || '#');
         
         fs.writeFileSync(path.join(projectsDir, `${proj.id}.html`), html, 'utf8');
@@ -161,51 +183,17 @@ const compileStaticPages = () => {
 
 // --- API 엔드포인트 ---
 
-// 1. 관리자 비밀번호 검증 및 토큰 발급
-app.post('/api/login', (req, res) => {
-    const { password } = req.body;
-    if (!password) {
-        return res.status(400).json({ success: false, message: '비밀번호를 입력해 주세요.' });
-    }
-
-    if (getHash(password) === ADMIN_HASH) {
-        // 쿠키 보안 설정 (httpOnly 적용하여 JS 탈취 방지, 로컬용)
-        res.cookie('admin_token', ADMIN_HASH, {
-            httpOnly: true,
-            maxAge: 24 * 60 * 60 * 1000 // 1일
-        });
-        return res.json({ success: true, message: '인증 성공' });
-    } else {
-        return res.status(401).json({ success: false, message: '비밀번호가 일치하지 않습니다.' });
-    }
-});
-
-// 2. 인증 상태 체크
-app.get('/api/check-auth', (req, res) => {
-    const token = req.cookies.admin_token;
-    if (token === ADMIN_HASH) {
-        return res.json({ authenticated: true });
-    }
-    return res.json({ authenticated: false });
-});
-
-// 3. 로그아웃
-app.post('/api/logout', (req, res) => {
-    res.clearCookie('admin_token');
-    res.json({ success: true });
-});
-
-// 4. 프로젝트 목록 조회 (공개 API)
+// 1. 프로젝트 목록 조회
 app.get('/api/projects', (req, res) => {
     const projects = readProjectsData();
     res.json(projects);
 });
 
-// 5. 프로젝트 추가 (보안 적용)
-app.post('/api/projects', authenticate, (req, res) => {
-    const { title, category, description, imageUrl, year, client, link } = req.body;
+// 2. 프로젝트 추가
+app.post('/api/projects', (req, res) => {
+    const { title, category, description, imageUrl, startDate, endDate, dateDisplayMode, contribution, role, techStack, link } = req.body;
 
-    if (!title || !category || !description || !imageUrl || !year) {
+    if (!title || !description || !imageUrl || !startDate || !dateDisplayMode || !contribution || !role || !techStack) {
         return res.status(400).json({ success: false, message: '필수 필드가 누락되었습니다.' });
     }
 
@@ -213,17 +201,20 @@ app.post('/api/projects', authenticate, (req, res) => {
     const newProject = {
         id: `project_${Date.now()}`,
         title,
-        category,
+        category: category || '',
         description,
         imageUrl,
-        year,
-        client: client || '',
+        startDate,
+        endDate: endDate || '',
+        dateDisplayMode,
+        contribution,
+        role,
+        techStack,
         link: link || ''
     };
 
     projects.push(newProject);
     if (writeProjectsData(projects)) {
-        // 정적 HTML 재생성
         compileStaticPages();
         return res.status(201).json({ success: true, project: newProject });
     } else {
@@ -231,8 +222,47 @@ app.post('/api/projects', authenticate, (req, res) => {
     }
 });
 
-// 6. 프로젝트 삭제 (보안 적용)
-app.delete('/api/projects/:id', authenticate, (req, res) => {
+// 3. 프로젝트 수정
+app.put('/api/projects/:id', (req, res) => {
+    const { id } = req.params;
+    const { title, category, description, imageUrl, startDate, endDate, dateDisplayMode, contribution, role, techStack, link } = req.body;
+
+    if (!title || !description || !imageUrl || !startDate || !dateDisplayMode || !contribution || !role || !techStack) {
+        return res.status(400).json({ success: false, message: '필수 필드가 누락되었습니다.' });
+    }
+
+    let projects = readProjectsData();
+    const index = projects.findIndex(p => p.id === id);
+
+    if (index === -1) {
+        return res.status(404).json({ success: false, message: '해당 프로젝트를 찾을 수 없습니다.' });
+    }
+
+    projects[index] = {
+        ...projects[index],
+        title,
+        category: category || '',
+        description,
+        imageUrl,
+        startDate,
+        endDate: endDate || '',
+        dateDisplayMode,
+        contribution,
+        role,
+        techStack,
+        link: link || ''
+    };
+
+    if (writeProjectsData(projects)) {
+        compileStaticPages();
+        return res.json({ success: true, project: projects[index] });
+    } else {
+        return res.status(500).json({ success: false, message: '데이터베이스 업데이트 실패' });
+    }
+});
+
+// 4. 프로젝트 삭제
+app.delete('/api/projects/:id', (req, res) => {
     const { id } = req.params;
     let projects = readProjectsData();
     const originalLength = projects.length;
@@ -244,11 +274,41 @@ app.delete('/api/projects/:id', authenticate, (req, res) => {
     }
 
     if (writeProjectsData(projects)) {
-        // 정적 HTML 재생성
         compileStaticPages();
         return res.json({ success: true, message: '삭제 완료' });
     } else {
         return res.status(500).json({ success: false, message: '데이터베이스 업데이트 실패' });
+    }
+});
+
+// 5. 프로젝트 순서 변경
+app.post('/api/projects/reorder', (req, res) => {
+    const { order } = req.body;
+    if (!order || !Array.isArray(order)) {
+        return res.status(400).json({ success: false, message: '올바르지 않은 순서 데이터입니다.' });
+    }
+
+    const projects = readProjectsData();
+    const sortedProjects = [];
+    order.forEach(id => {
+        const proj = projects.find(p => p.id === id);
+        if (proj) {
+            sortedProjects.push(proj);
+        }
+    });
+
+    // 만약 누락된 프로젝트가 있다면 누락 방지를 위해 뒤에 추가
+    projects.forEach(proj => {
+        if (!sortedProjects.some(p => p.id === proj.id)) {
+            sortedProjects.push(proj);
+        }
+    });
+
+    if (writeProjectsData(sortedProjects)) {
+        compileStaticPages();
+        return res.json({ success: true, message: '순서 변경 완료' });
+    } else {
+        return res.status(500).json({ success: false, message: '데이터베이스 저장 실패' });
     }
 });
 

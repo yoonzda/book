@@ -2,13 +2,26 @@
 .project-title {
     font-family: var(--font-header);
     font-size: clamp(2.5rem, 6.5vw, 6rem);
-    font-weight: 700;
+    font-weight: 500;
     line-height: 1.05;
     text-transform: uppercase;
     color: var(--color-text);
 }
 
+.project-title a,
+.project-title a:visited {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.project-title a:hover,
+.project-title a:active {
+    color: var(--color-accent);
+}
+
 .project-category {
+    display: block;
     font-family: var(--font-ui);
     color: var(--color-accent);
     font-size: 0.85rem;
@@ -111,17 +124,24 @@
 .input-brutal, .textarea-brutal {
     width: 100%;
     padding: 1rem;
-    border: 1px solid var(--color-border);
-    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.08); /* 얇고 미세한 투명 보더 */
+    background-color: rgba(255, 255, 255, 0.02); /* 극도로 연한 투명 배경 */
     color: var(--color-text);
     font-family: var(--font-body);
     font-size: 1rem;
-    transition: border-color 0.3s ease;
+    border-radius: 4px; /* 부드러운 약한 둥근 테두리 */
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+body.invert-mode .input-brutal, body.invert-mode .textarea-brutal {
+    border-color: rgba(0, 0, 0, 0.08);
+    background-color: rgba(0, 0, 0, 0.01);
 }
 
 .input-brutal:focus, .textarea-brutal:focus {
     outline: none;
     border-color: var(--color-accent);
+    background-color: rgba(255, 90, 0, 0.02); /* 포커스 시 은은한 오렌지빛 백그라운드 */
 }
 
 .textarea-brutal {
@@ -135,8 +155,8 @@ footer.project-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: var(--border-stroke);
-    padding-top: 2rem;
+    border-top: none;
+    padding-top: 1rem;
     margin-top: auto;
 }
 
@@ -181,17 +201,31 @@ footer.project-footer {
     color: var(--color-accent);
 }
 
-/* 관리자 페이지 전용 컴포넌트 스타일 */
-.auth-title {
-    font-size: 2.2rem;
-    margin-bottom: 2rem;
-    border-bottom: var(--border-stroke);
-    padding-bottom: 1rem;
-}
+
 
 .btn-brutal-full {
     width: 100%;
-    margin-top: 1.5rem;
+    margin-top: 2rem;
+    background-color: var(--color-accent); /* 통일감 있는 오렌지 버튼 */
+    color: #0A0A0A;
+    border: 1px solid transparent;
+    border-radius: 50px; /* 둥근 캡슐 형태로 저장 단추 디자인화 */
+    padding: 1.1rem 2.5rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
+}
+
+.btn-brutal-full:hover {
+    background-color: var(--color-accent);
+    opacity: 0.95;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(255, 90, 0, 0.3); /* 발광 효과 */
+}
+
+body.invert-mode .btn-brutal-full {
+    background-color: var(--color-accent);
+    color: #0A0A0A;
 }
 
 .admin-header-title {
@@ -199,9 +233,16 @@ footer.project-footer {
 }
 
 .form-container-card {
-    border: var(--border-stroke);
-    padding: 2.5rem;
-    background-color: rgba(10, 10, 10, 0.3);
+    border: 1px solid transparent; /* 기본 테두리 투명 처리 (레이아웃 쉬프트 방지) */
+    padding: 3rem 2.5rem; /* 카드 크기에 걸맞는 패딩 */
+    background-color: #161616; /* 목록 페이지의 어두운 카드와 동일한 색상 매칭 */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25); /* 미세 그림자 */
+    border-radius: 6px; /* 6px의 약한 라운딩 통일 */
+}
+
+body.invert-mode .form-container-card {
+    background-color: #FFFFFF; /* 라이트 모드에서는 순백색 */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
 }
 
 .admin-section-title {
@@ -222,4 +263,380 @@ footer.project-footer {
 .btn-delete-row {
     padding: 0.4rem 1rem;
     font-size: 0.8rem;
+}
+
+/* 플러스 등록 버튼 */
+.btn-add-plus {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--color-text);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    font-family: var(--font-ui);
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.btn-add-plus:hover {
+    color: var(--color-accent);
+}
+
+.btn-add-plus .plus-icon {
+    font-size: 2.2rem;
+    line-height: 1;
+    display: inline-block;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-add-plus:hover .plus-icon {
+    transform: rotate(90deg);
+}
+
+.btn-add-plus .plus-text {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: max-width 0.9s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease-out, margin-left 0.9s cubic-bezier(0.25, 1, 0.5, 1);
+    margin-left: 0;
+}
+
+.btn-add-plus:hover .plus-text {
+    max-width: 6.8rem;
+    opacity: 1;
+    margin-left: 0.8rem;
+}
+
+/* 관리자 카드 목록 및 드래그 앤 드롭 스타일 */
+.admin-cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin-top: 1rem;
+}
+
+.admin-project-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid transparent; /* 기본 테두리 투명 처리 (레이아웃 쉬프트 방지) */
+    background-color: #161616; /* 모든 프로젝트 카드 동일하게 세련된 어두운 배경 */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25); /* 연한 그림자 */
+    border-radius: 6px; /* 아주 약한 곡률 추가 */
+    padding: 2.2rem 2rem; /* 상하 여백 증가 */
+    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    position: relative;
+    cursor: pointer; /* 카드 클릭 시 상세 페이지 이동 유도 */
+}
+
+.reorder-mode .admin-project-card {
+    cursor: default; /* 순서 변경 모드에서는 드래그 핸들만 포인터 동작하도록 복귀 */
+}
+
+.admin-project-card:hover {
+    border-color: var(--color-accent); /* 호버 시 주황색 테두리 노출 */
+}
+
+/* 반전 모드(라이트 모드)에서의 카드 배경색 및 그림자 */
+body.invert-mode .admin-project-card {
+    background-color: #FFFFFF; /* 모든 프로젝트 카드 동일하게 깔끔한 순백색 배경 */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+/* 드래그 상태 효과 */
+.admin-project-card.dragging {
+    opacity: 0.3;
+    background-color: rgba(255, 90, 0, 0.1);
+    transform: scale(0.98);
+    box-shadow: none;
+}
+
+.admin-project-card.drag-over {
+    background-color: rgba(255, 90, 0, 0.05);
+    box-shadow: 0 0 10px rgba(255, 90, 0, 0.2);
+}
+
+.card-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex: 1;
+}
+
+/* 기본 상태에서는 드래그 핸들 숨김 */
+.admin-project-card .btn-drag-handle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: var(--color-text);
+    font-size: 1.6rem;
+    cursor: grab;
+    padding: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.35;
+    transition: opacity 0.2s ease, color 0.2s ease;
+    user-select: none;
+}
+
+/* 순서 변경 모드일 때 드래그 핸들 보여줌 */
+.reorder-mode .admin-project-card .btn-drag-handle {
+    display: flex;
+}
+
+.btn-drag-handle:hover {
+    opacity: 1;
+    color: var(--color-accent);
+}
+
+.btn-drag-handle:active {
+    cursor: grabbing;
+}
+
+.card-num {
+    font-family: var(--font-header);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    opacity: 0.8;
+    width: 2.2rem;
+    text-align: left;
+}
+
+.card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.card-title {
+    font-family: var(--font-header);
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: var(--color-text);
+    line-height: 1.2;
+    margin: 0;
+}
+
+.card-date {
+    font-size: 0.8rem;
+    opacity: 0.5;
+}
+
+.card-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* 순서 변경 모드일 때 카드 수정/삭제 버튼 숨김 */
+.reorder-mode .admin-project-card .card-actions {
+    display: none;
+}
+
+/* 심플한 수정/삭제 UI 버튼 스타일 */
+.btn-simple-action {
+    background: transparent;
+    border: none;
+    color: var(--color-text);
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+    opacity: 0.6;
+    transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.btn-simple-action:hover {
+    opacity: 1;
+}
+
+.btn-simple-action.btn-edit-simple:hover {
+    color: var(--color-accent);
+}
+
+.btn-simple-action.btn-delete-simple:hover {
+    color: #FF3333;
+}
+
+.action-divider {
+    color: var(--color-text);
+    opacity: 0.2;
+    font-size: 0.8rem;
+    user-select: none;
+}
+
+/* 상단 액션 그룹 및 버튼 스타일 */
+.admin-action-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* 하단 플로팅 액션 바 스타일 (옵시디언 블랙 필 및 발광 LED 도트) */
+.floating-action-bar {
+    position: fixed;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    background-color: rgba(10, 10, 10, 0.85); /* 반투명 옵시디언 블랙 */
+    backdrop-filter: blur(12px); /* 백드롭 블러로 투명 유리 느낌 연출 */
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12); /* 미세한 광택 테두리 */
+    border-radius: 50px; /* 완벽한 알약 형태 */
+    padding: 0.35rem 0.5rem; /* 단일 알약 대칭 정렬을 위한 균일 패딩 */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.floating-action-bar:hover {
+    border-color: rgba(255, 90, 0, 0.4); /* 호버 시 미세한 오렌지 테두리 켜짐 */
+    box-shadow: 0 20px 40px rgba(255, 90, 0, 0.12), 0 4px 15px rgba(0, 0, 0, 0.4); /* 오렌지색 언더글로우 */
+}
+
+body.invert-mode .floating-action-bar {
+    background-color: rgba(255, 255, 255, 0.85); /* 반투명 클린 화이트 */
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+body.invert-mode .floating-action-bar:hover {
+    border-color: rgba(255, 90, 0, 0.4);
+    box-shadow: 0 20px 40px rgba(255, 90, 0, 0.08), 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+.btn-floating-pill {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.85); /* 기본 텍스트 선명하게 노출 */
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    padding: 0.7rem 1.6rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+body.invert-mode .btn-floating-pill {
+    color: rgba(10, 10, 10, 0.85);
+}
+
+/* 기본 순서 변경 버튼 */
+#btn-reorder-start {
+    background-color: transparent;
+    transition: all 0.25s ease;
+}
+
+#btn-reorder-start:hover {
+    color: #FFFFFF;
+    transform: scale(1.02);
+}
+
+body.invert-mode #btn-reorder-start:hover {
+    color: #0A0A0A;
+}
+
+/* 발광 LED 오렌지 도트 스타일 */
+.btn-dot-glow {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background-color: var(--color-accent);
+    border-radius: 50%;
+    margin-right: 0.55rem; /* 도트가 텍스트 앞에 오므로 마진 방향을 우측으로 변경 */
+    box-shadow: 0 0 8px var(--color-accent); /* 빛나는 광채 효과 */
+    vertical-align: middle;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+/* 호버 시 도트가 더 밝게 발광 */
+.btn-floating-pill:hover .btn-dot-glow {
+    transform: scale(1.15);
+    box-shadow: 0 0 12px var(--color-accent), 0 0 6px var(--color-accent);
+}
+
+/* 프로젝트 폼 스타일 초기화 (감싸는 박스 제거) */
+#project-form {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* 브루탈리스트 라디오 버튼 스타일 */
+.radio-group-brutal {
+    display: flex;
+    gap: 2.5rem;
+    margin-top: 0.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.radio-label-brutal {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-ui);
+    font-size: 0.95rem;
+    color: var(--color-text);
+    cursor: pointer;
+    user-select: none;
+    font-weight: 500;
+}
+
+.radio-label-brutal input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.radio-custom {
+    width: 16px;
+    height: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.15); /* 더 얇고 흐린 테두리 */
+    border-radius: 50%;
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.01);
+    transition: all 0.2s ease;
+}
+
+body.invert-mode .radio-custom {
+    border-color: rgba(0, 0, 0, 0.15);
+    background-color: rgba(0, 0, 0, 0.01);
+}
+
+.radio-label-brutal input[type="radio"]:checked + .radio-custom {
+    border-color: var(--color-accent);
+    background-color: transparent;
+}
+
+.radio-label-brutal input[type="radio"]:checked + .radio-custom::after {
+    content: '';
+    position: absolute;
+    width: 6px; /* 10px -> 6px로 축소하여 얇은 도트 연출 */
+    height: 6px;
+    background-color: var(--color-accent);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: none; /* 글로우(발광) 삭제로 깔끔하고 진하지 않은 도트 구현 */
 }

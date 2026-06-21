@@ -38,14 +38,14 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 4rem;
+    padding: 7rem 4rem 4.5rem 4rem;
     border-bottom: var(--border-stroke);
     position: relative;
     overflow: hidden;
 }
 
 /* 헤더 및 레이아웃 구조 */
-header {
+body > header {
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -57,6 +57,53 @@ header {
     top: 0;
     left: 0;
     z-index: 100;
+}
+
+body > header a.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+}
+
+body > header a.logo img.logo-icon {
+    height: 2.0rem;
+    width: auto;
+    display: block;
+}
+
+.logo-text-group {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+    text-align: left;
+}
+
+.logo-title {
+    display: block;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: var(--color-text);
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.logo-dot {
+    color: var(--color-accent);
+    margin-left: 0.05em;
+    display: inline;
+}
+
+.logo-subtitle {
+    display: block;
+    font-size: 0.48rem;
+    color: var(--color-text);
+    opacity: 0.55;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
 }
 
 main.main-content {
@@ -86,7 +133,7 @@ main.main-content {
         scroll-snap-type: none;
     }
     
-    header {
+    body > header {
         padding: 1rem 1.5rem;
     }
     
@@ -141,7 +188,7 @@ main.main-content {
     font-weight: 500;
 }
 
-.project-link-row {
+.project-link-row, .project-meta-full-row {
     grid-column: span 2;
     border-top: var(--border-stroke);
     padding-top: 2rem;
@@ -196,8 +243,9 @@ main.main-content {
 .project-card-footer {
     display: flex;
     justify-content: space-between;
-    border-top: var(--border-stroke);
-    padding-top: 1.5rem;
+    align-items: center;
+    border-top: none;
+    padding-top: 1rem;
     width: 100%;
 }
 
@@ -209,47 +257,53 @@ main.main-content {
     .project-meta-grid {
         grid-template-columns: 1fr;
     }
-    .project-link-row {
+    .project-link-row, .project-meta-full-row {
         grid-column: span 1;
+    }
+    .project-footer {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 1.5rem;
+    }
+    .project-meta-group {
+        flex-direction: column;
+        gap: 0.5rem !important;
+    }
+    .project-actions-group {
+        width: 100%;
+        flex-direction: column;
+    }
+    .project-actions-group .btn-brutal {
+        width: 100%;
     }
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
-.auth-panel-wrapper {
-    min-height: 85dvh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem;
-}
 
-.auth-card {
-    width: 100%;
-    max-width: 450px;
-    border: var(--border-stroke);
-    padding: 3rem;
-    background-color: var(--color-bg);
-}
 
 .admin-panel-container {
-    padding: 8rem 4rem 4rem 4rem;
+    padding: 4rem 4rem 10rem 4rem;
 }
 
 .admin-title-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
     border-bottom: var(--border-stroke);
     padding-bottom: 2rem;
     margin-bottom: 3rem;
 }
 
+.admin-title-row .project-category {
+    margin-bottom: 0.7rem;
+}
+
 @media (max-width: 768px) {
     .admin-panel-container {
-        padding: 6rem 1.5rem 2rem 1.5rem;
+        padding: 2rem 1.5rem 8rem 1.5rem;
     }
     .admin-title-row {
         flex-direction: column;
@@ -271,4 +325,97 @@ main.main-content {
         grid-column: span 12;
     }
 }
+
+/* 탭 컴포넌트 스타일 */
+.tab-headers {
+    display: flex;
+    gap: 0;
+    border: var(--border-stroke);
+    border-bottom: none;
+    margin-bottom: 2rem;
+    width: fit-content;
+}
+
+.tab-btn {
+    padding: 1rem 2rem;
+    border: none;
+    border-right: var(--border-stroke);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-ui);
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-btn:last-child {
+    border-right: none;
+}
+
+.tab-btn:hover {
+    background-color: var(--color-border);
+}
+
+.tab-btn.active {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* 날짜 입력 폼 로우 */
+.form-row-date {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-row-date .col-date {
+    flex: 2;
+    margin-bottom: 0;
+}
+
+.form-row-date .col-mode {
+    flex: 3;
+    margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+    .form-row-date {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}
+
+.form-actions-row {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.btn-cancel-brutal {
+    border: var(--border-stroke);
+    background-color: transparent;
+    color: var(--color-text);
+    font-family: var(--font-ui);
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 1rem 2.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel-brutal:hover {
+    background-color: #ff3333;
+    color: #ffffff;
+    border-color: #ff3333;
+}
+
 

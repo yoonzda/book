@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>프로젝트 관리 - YOONZDA</title>
+    <link rel="icon" type="image/png" href="/images/logo-icon.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 초기 테마 반전(Invert) 설정: 첫 렌더링 전 깜빡임 차단 -->
+    <script>
+        if (localStorage.getItem('theme-invert') === 'true') {
+            document.body.classList.add('invert-mode');
+        }
+    </script>
+    <!-- 커스텀 커서 -->
+    <div class="custom-cursor"></div>
+
+    <!-- 노이즈 캔버스 배경 -->
+    <canvas id="noise-canvas"></canvas>
+
+    <!-- 상단 내비게이션 바 -->
+    <header>
+        <a href="/" class="logo" id="home-link">
+            <img src="/images/logo-icon.png" alt="YOONZDA" class="logo-icon">
+            <div class="logo-text-group">
+                <span class="logo-title">yoonzda<span class="logo-dot">.</span></span>
+                <span class="logo-subtitle">Creative Web Developer</span>
+            </div>
+        </a>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#" class="nav-link" id="toggle-invert">INVERT</a></li>
+                <li><a href="/" class="nav-link" id="back-link">GO TO SITE</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- 메인 컨텐츠 영역 -->
+    <main class="main-content">
+        
+        <div id="admin-panel" class="admin-panel-container">
+            <div class="admin-title-row">
+                <div>
+                    <span class="project-category" id="form-category-label">NEW ENTRY</span>
+                    <h1 class="project-title admin-header-title" id="form-action-title">프로젝트 등록</h1>
+                </div>
+            </div>
+            
+            <form id="project-form">
+                <input type="hidden" id="projectId">
+                
+                <div class="form-group">
+                    <label for="title" class="label-brutal">프로젝트 제목</label>
+                    <input type="text" id="title" class="input-brutal" required>
+                </div>
+                <div class="form-group">
+                    <label for="category" class="label-brutal">분야 (선택)</label>
+                    <input type="text" id="category" class="input-brutal">
+                </div>
+                <div class="form-group">
+                    <label for="imageUrl" class="label-brutal">이미지 주소 (URL)</label>
+                    <input type="text" id="imageUrl" class="input-brutal" required>
+                </div>
+                
+                <!-- 기간 노출 방식 선택 (라디오 버튼) -->
+                <div class="form-group">
+                    <span class="label-brutal">기간 노출 방식</span>
+                    <div class="radio-group-brutal">
+                        <label class="radio-label-brutal">
+                            <input type="radio" name="dateDisplayMode" value="period" checked>
+                            <span class="radio-custom"></span>
+                            기간
+                        </label>
+                        <label class="radio-label-brutal">
+                            <input type="radio" name="dateDisplayMode" value="ongoing">
+                            <span class="radio-custom"></span>
+                            진행 중
+                        </label>
+                        <label class="radio-label-brutal">
+                            <input type="radio" name="dateDisplayMode" value="single">
+                            <span class="radio-custom"></span>
+                            단일
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-row-date">
+                    <div class="form-group col-date" id="group-start-date">
+                        <label for="startDate" class="label-brutal" id="label-start-date">시작일</label>
+                        <input type="text" id="startDate" class="input-brutal date-mask" placeholder="YYYY.MM" maxlength="7" required>
+                    </div>
+                    <div class="form-group col-date" id="group-end-date">
+                        <label for="endDate" class="label-brutal" id="label-end-date">완료일</label>
+                        <input type="text" id="endDate" class="input-brutal date-mask" placeholder="YYYY.MM" maxlength="7">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="contribution" class="label-brutal">기여도</label>
+                    <input type="text" id="contribution" class="input-brutal" required>
+                </div>
+                <div class="form-group">
+                    <label for="role" class="label-brutal">역할</label>
+                    <input type="text" id="role" class="input-brutal" required>
+                </div>
+                <div class="form-group">
+                    <label for="techStack" class="label-brutal">기술 스택</label>
+                    <input type="text" id="techStack" class="input-brutal" required>
+                </div>
+                <div class="form-group">
+                    <label for="link" class="label-brutal">링크 (선택)</label>
+                    <input type="text" id="link" class="input-brutal">
+                </div>
+                <div class="form-group">
+                    <label for="description" class="label-brutal">상세 설명</label>
+                    <textarea id="description" class="textarea-brutal" required></textarea>
+                </div>
+
+                <div class="form-actions-row">
+                    <button type="submit" id="btn-submit" class="btn-brutal btn-brutal-full">저장하기</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- 하단 플로팅 액션 바 (목록 복귀용) -->
+    <div class="floating-action-bar" id="form-floating-bar">
+        <button id="btn-back-to-list" class="btn-floating-pill">
+            <span class="btn-dot-glow"></span>
+            목록으로
+        </button>
+    </div>
+
+    <!-- 폼 로직 스크립트 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // -----------------------------------------
+            // 1. 커스텀 마우스 커서 (Lerp)
+            // -----------------------------------------
+            const cursor = document.querySelector('.custom-cursor');
+            let mouseX = 0, mouseY = 0;
+            let cursorX = 0, cursorY = 0;
+            const lerpFactor = 0.1;
+
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            function animateCursor() {
+                cursorX += (mouseX - cursorX) * lerpFactor;
+                cursorY += (mouseY - cursorY) * lerpFactor;
+                cursor.style.transform = `translate3d(${cursorX - 10}px, ${cursorY - 10}px, 0)`;
+                requestAnimationFrame(animateCursor);
+            }
+            requestAnimationFrame(animateCursor);
+
+            // 호버 감지
+            function bindHoverEffects() {
+                const interactiveElements = document.querySelectorAll('a, button, input, select, textarea');
+                interactiveElements.forEach(el => {
+                    el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                    el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+                });
+            }
+            bindHoverEffects();
+
+            // -----------------------------------------
+            // 2. 필름 노이즈(Film Grain) 효과
+            // -----------------------------------------
+            const canvas = document.getElementById('noise-canvas');
+            const ctx = canvas.getContext('2d');
+            let w = canvas.width = window.innerWidth;
+            let h = canvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            });
+
+            function renderNoise() {
+                ctx.clearRect(0, 0, w, h);
+                const idata = ctx.createImageData(w, h);
+                const buffer32 = new Uint32Array(idata.data.buffer);
+                const len = buffer32.length;
+                
+                for (let i = 0; i < len; i += 13) {
+                    if (Math.random() < 0.05) {
+                        buffer32[i] = 0x15ffffff;
+                    }
+                }
+                ctx.putImageData(idata, 0, 0);
+                setTimeout(() => {
+                    requestAnimationFrame(renderNoise);
+                }, 50);
+            }
+            requestAnimationFrame(renderNoise);
+
+            // 3. 테마 반전 토글
+            const btnInvert = document.getElementById('toggle-invert');
+
+
+
+            btnInvert.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.body.classList.toggle('invert-mode');
+                localStorage.setItem('theme-invert', document.body.classList.contains('invert-mode'));
+            });
+
+            // -----------------------------------------
+            // 4. 날짜 자동 하이픈 마스크 (YYYY-MM)
+            // -----------------------------------------
+            const dateInputs = document.querySelectorAll('.date-mask');
+            dateInputs.forEach(input => {
+                input.addEventListener('input', (e) => {
+                    let val = e.target.value.replace(/[^0-9]/g, '');
+                    let formatted = '';
+                    if (val.length > 0) {
+                        formatted += val.substring(0, 4);
+                    }
+                    if (val.length > 4) {
+                        formatted += '.' + val.substring(4, 6);
+                    }
+                    e.target.value = formatted;
+                });
+            });
+
+            // -----------------------------------------
+            // 4-2. 날짜 입력 필드 노출 제어 로직
+            // -----------------------------------------
+            const groupStartDate = document.getElementById('group-start-date');
+            const groupEndDate = document.getElementById('group-end-date');
+            const inputStartDate = document.getElementById('startDate');
+            const inputEndDate = document.getElementById('endDate');
+            const labelStartDate = document.getElementById('label-start-date');
+            const labelEndDate = document.getElementById('label-end-date');
+
+            function updateDateFieldsVisibility(mode) {
+                if (mode === 'period') {
+                    groupStartDate.classList.remove('hidden');
+                    groupEndDate.classList.remove('hidden');
+                    inputStartDate.required = true;
+                    inputEndDate.required = false;
+                    labelStartDate.innerText = '시작일';
+                    labelEndDate.innerText = '완료일';
+                } else if (mode === 'ongoing') {
+                    groupStartDate.classList.remove('hidden');
+                    groupEndDate.classList.add('hidden');
+                    inputStartDate.required = true;
+                    inputEndDate.required = false;
+                    inputEndDate.value = '';
+                    labelStartDate.innerText = '시작일';
+                } else if (mode === 'single') {
+                    groupStartDate.classList.add('hidden');
+                    groupEndDate.classList.remove('hidden');
+                    inputStartDate.required = false;
+                    inputEndDate.required = true;
+                    inputStartDate.value = '';
+                    labelEndDate.innerText = '완료일';
+                }
+            }
+
+            // 라디오 버튼 이벤트 감지
+            document.querySelectorAll('input[name="dateDisplayMode"]').forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    updateDateFieldsVisibility(e.target.value);
+                });
+            });
+
+            // 초기 호출
+            updateDateFieldsVisibility('period');
+
+            // -----------------------------------------
+            // 5. 폼 데이터 로드 (수정 모드 확인)
+            // -----------------------------------------
+            const projectForm = document.getElementById('project-form');
+            const btnBackToList = document.getElementById('btn-back-to-list');
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectId = urlParams.get('id');
+            const isEdit = !!projectId;
+
+            // 수정(상세 조회) 모드인 경우 데이터 가져와 채우기
+            if (isEdit) {
+                document.getElementById('form-category-label').innerText = 'PROJECT DETAIL';
+                document.getElementById('form-action-title').innerText = '프로젝트 상세 정보';
+                document.getElementById('btn-submit').innerText = '상세 정보 저장';
+                document.getElementById('projectId').value = projectId;
+                loadProjectDetails(projectId);
+            }
+
+            async function loadProjectDetails(id) {
+                try {
+                    const res = await fetch('/api/projects');
+                    const projects = await res.json();
+                    const proj = projects.find(p => p.id === id);
+                    if (proj) {
+                        document.getElementById('title').value = proj.title || '';
+                        document.getElementById('category').value = proj.category || '';
+                        document.getElementById('imageUrl').value = proj.imageUrl || '';
+                        document.getElementById('startDate').value = (proj.startDate || '').replace(/-/g, '.');
+                        document.getElementById('endDate').value = (proj.endDate || '').replace(/-/g, '.');
+                        
+                        const mode = proj.dateDisplayMode || 'period';
+                        const radio = document.querySelector(`input[name="dateDisplayMode"][value="${mode}"]`);
+                        if (radio) {
+                            radio.checked = true;
+                        }
+                        updateDateFieldsVisibility(mode);
+                        document.getElementById('contribution').value = proj.contribution || '';
+                        document.getElementById('role').value = proj.role || '';
+                        document.getElementById('techStack').value = proj.techStack || '';
+                        document.getElementById('link').value = proj.link || '';
+                        document.getElementById('description').value = proj.description || '';
+                    } else {
+                        alert('해당 프로젝트 데이터를 찾을 수 없습니다.');
+                        window.location.href = '/list.html';
+                    }
+                } catch (err) {
+                    console.error('데이터 로딩 오류:', err);
+                    alert('데이터를 가져오는 도중 오류가 발생했습니다.');
+                    window.location.href = '/list.html';
+                }
+            }
+
+            // 목록으로 돌아가기
+            if (btnBackToList) {
+                btnBackToList.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    window.location.href = '/list.html';
+                });
+            }
+
+            projectForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const id = document.getElementById('projectId').value;
+                const title = document.getElementById('title').value;
+                const category = document.getElementById('category').value;
+                const imageUrl = document.getElementById('imageUrl').value;
+                const startDate = document.getElementById('startDate').value;
+                const endDate = document.getElementById('endDate').value;
+                const dateDisplayMode = document.querySelector('input[name="dateDisplayMode"]:checked').value;
+
+                // 날짜 형식 유효성 검사 도우미 함수
+                function validateDate(dateStr) {
+                    if (!dateStr) return false;
+                    const match = dateStr.match(/^(\d{4})\.(\d{2})$/);
+                    if (!match) return false;
+                    const month = parseInt(match[2], 10);
+                    return (month >= 1 && month <= 12);
+                }
+
+                // 모드별 날짜 유효성 검사 수행
+                if (dateDisplayMode === 'period') {
+                    if (!validateDate(startDate)) {
+                        alert('시작일 형식이 올바르지 않습니다. YYYY.MM 형식(예: 2026.04, 월은 01~12)으로 입력해 주세요.');
+                        document.getElementById('startDate').focus();
+                        return;
+                    }
+                    if (!validateDate(endDate)) {
+                        alert('완료일 형식이 올바르지 않습니다. YYYY.MM 형식(예: 2026.06, 월은 01~12)으로 입력해 주세요.');
+                        document.getElementById('endDate').focus();
+                        return;
+                    }
+                } else if (dateDisplayMode === 'ongoing') {
+                    if (!validateDate(startDate)) {
+                        alert('시작일 형식이 올바르지 않습니다. YYYY.MM 형식(예: 2026.04, 월은 01~12)으로 입력해 주세요.');
+                        document.getElementById('startDate').focus();
+                        return;
+                    }
+                } else if (dateDisplayMode === 'single') {
+                    if (!validateDate(endDate)) {
+                        alert('완료일 형식이 올바르지 않습니다. YYYY.MM 형식(예: 2026.06, 월은 01~12)으로 입력해 주세요.');
+                        document.getElementById('endDate').focus();
+                        return;
+                    }
+                }
+
+                const contribution = document.getElementById('contribution').value;
+                const role = document.getElementById('role').value;
+                const techStack = document.getElementById('techStack').value;
+                const link = document.getElementById('link').value;
+                const description = document.getElementById('description').value;
+
+                const payload = { title, category, imageUrl, startDate, endDate, dateDisplayMode, contribution, role, techStack, link, description };
+
+                const url = isEdit ? `/api/projects/${id}` : '/api/projects';
+                const method = isEdit ? 'PUT' : 'POST';
+
+                try {
+                    const res = await fetch(url, {
+                        method: method,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const data = await res.json();
+
+                    if (res.ok && data.success) {
+                        alert(isEdit ? '프로젝트가 성공적으로 수정되었습니다.' : '프로젝트가 성공적으로 등록되었습니다.');
+                        window.location.href = '/list.html';
+                    } else {
+                        alert((isEdit ? '수정 실패: ' : '등록 실패: ') + (data.message || '오류 발생'));
+                    }
+                } catch (err) {
+                    console.error('요청 에러:', err);
+                    alert('요청 중 서버 에러가 발생했습니다.');
+                }
+            });
+
+
+        });
+    </script>
+</body>
+</html>

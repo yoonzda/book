@@ -1,12 +1,44 @@
 [
   {
-    "id": "project_1781970399891",
-    "title": "프로젝트 제목",
-    "category": "프로젝트 분야",
-    "description": "프로젝트 설명",
-    "imageUrl": "프로젝트 이미지?",
-    "year": "프로젝트 제작 연도",
-    "client": "프로젝트 고객사",
-    "link": "프로젝트 라이브 주소 "
+    "id": "project_3",
+    "title": "윤지서점",
+    "category": "분야",
+    "description": "프론트엔드 개발 과정에서 Antigravity를 활용하여 코드 구조 설계, 반복 작업 자동화를 수행했습니다.\n기획부터 UI/UX 디자인, 프론트엔드 개발 및 배포까지 전 과정 단독 수행",
+    "imageUrl": "/images/logo.png",
+    "startDate": "2026.09",
+    "endDate": "2026.05",
+    "dateDisplayMode": "period",
+    "contribution": "100%",
+    "role": "1인 프로젝트 (기획 · 디자인 · 개발)",
+    "techStack": "Git, GitHub, Vercel (배포 경험)",
+    "link": "https://yoonzda-record.vercel.app/"
+  },
+  {
+    "id": "project_1",
+    "title": "Aether Web Platform",
+    "category": "BRANDING & WEB APP",
+    "description": "Next-generation cloud workspace offering automated layout compiling, interactive visual flow charts, and real-time multiplayer editing using WebSockets.",
+    "imageUrl": "/images/logo.png",
+    "startDate": "2026.01",
+    "endDate": "2026.03",
+    "dateDisplayMode": "period",
+    "contribution": "100%",
+    "role": "Lead Fullstack Developer",
+    "techStack": "Next.js, Node.js, WebSockets, Redis",
+    "link": "https://example.com"
+  },
+  {
+    "id": "project_2",
+    "title": "Interactive 3D Art Gallery",
+    "category": "3D GRAPHICS & EXPERIMENT",
+    "description": "Virtual gallery space utilizing custom shader engines, WebGL performance pipelines, and immersive spatial audio mappings for digital artists.",
+    "imageUrl": "/images/logo.png",
+    "startDate": "2026.04",
+    "endDate": "",
+    "dateDisplayMode": "ongoing",
+    "contribution": "85%",
+    "role": "3D Interaction Engineer",
+    "techStack": "Three.js, WebGL, GLSL Shaders, GSAP",
+    "link": "https://example.com"
   }
 ]
