@@ -109,20 +109,20 @@ const compileStaticPages = () => {
                         <p class="project-desc project-card-desc">${proj.description}</p>
                     </div>
                     <footer class="project-footer project-card-footer">
-                        <div class="project-meta-group" style="display: flex; gap: 2rem;">
-                            <span class="project-meta-item"><span class="project-meta-label">PERIOD</span>${formattedDate}</span>
-                            <span class="project-meta-item"><span class="project-meta-label">CONTRIBUTION</span>${proj.contribution || '100%'}</span>
-                        </div>
                         <div class="project-actions-group">
+                            <a href="projects/${proj.id}.html" class="btn-brutal btn-detail-view project-link" data-image="${proj.imageUrl}">
+                                <span>상세내용</span>
+                                <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </a>
                             ${proj.link ? `
                             <a href="${proj.link}" target="_blank" class="btn-brutal btn-live-site">
                                 <span>사이트 이동</span>
                                 <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
                             </a>` : ''}
-                            <a href="projects/${proj.id}.html" class="btn-brutal btn-detail-view project-link" data-image="${proj.imageUrl}">
-                                <span>상세내용</span>
-                                <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                            </a>
+                        </div>
+                        <div class="project-meta-group" style="display: flex; gap: 2rem;">
+                            <span class="project-meta-item"><span class="project-meta-label">PERIOD</span>${formattedDate}</span>
+                            <span class="project-meta-item"><span class="project-meta-label">CONTRIBUTION</span>${proj.contribution || '100%'}</span>
                         </div>
                     </footer>
                 </div>
