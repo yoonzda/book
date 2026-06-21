@@ -370,7 +370,7 @@ body.invert-mode .form-container-card {
 .btn-back-arrow:hover .arrow-text {
     max-width: 6.8rem;
     opacity: 1;
-    margin-left: 0.8rem;
+    margin-left: 0.4rem; /* 아이콘 자체 우측 여백 및 호버 시 좌측 이동(-4px)을 고려하여 간격을 0.4rem으로 보정 */
 }
 
 /* 관리자 카드 목록 및 드래그 앤 드롭 스타일 */
