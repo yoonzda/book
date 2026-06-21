@@ -86,4 +86,10 @@
     object-fit: cover;
 }
 
+/* 라이트 모드(Invert)에서 커스텀 커서 가독성 개선 */
+body.invert-mode .custom-cursor:not(.hovered) {
+    mix-blend-mode: normal;
+    border-color: var(--color-text); /* 검은색 테두리로 노출하여 가시성 확보 */
+}
+
 

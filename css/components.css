@@ -112,6 +112,10 @@
     gap: 0.5rem;
 }
 
+.form-group:last-of-type {
+    margin-bottom: 0;
+}
+
 .label-brutal {
     font-family: var(--font-ui);
     font-weight: 700;
@@ -206,26 +210,32 @@ footer.project-footer {
 .btn-brutal-full {
     width: 100%;
     margin-top: 2rem;
-    background-color: var(--color-accent); /* 통일감 있는 오렌지 버튼 */
-    color: #0A0A0A;
-    border: 1px solid transparent;
-    border-radius: 50px; /* 둥근 캡슐 형태로 저장 단추 디자인화 */
+    background-color: transparent;
+    color: var(--color-text);
+    border: 1px solid var(--color-text);
+    border-radius: 0; /* 강렬한 기하학적 각진 모서리 */
     padding: 1.1rem 2.5rem;
     font-weight: 700;
-    letter-spacing: 0.05em;
-    transition: all 0.3s ease;
+    letter-spacing: 0.08em;
+    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), 
+                box-shadow 0.2s cubic-bezier(0.25, 1, 0.5, 1), 
+                background-color 0.2s ease, 
+                border-color 0.2s ease, 
+                color 0.2s ease;
+    cursor: pointer;
 }
 
 .btn-brutal-full:hover {
     background-color: var(--color-accent);
-    opacity: 0.95;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 15px rgba(255, 90, 0, 0.3); /* 발광 효과 */
+    color: #0A0A0A;
+    border-color: var(--color-accent);
+    transform: translate(-4px, -4px); /* 대각선 방향으로 이동 */
+    box-shadow: 4px 4px 0 var(--color-text); /* 브루탈리스트 고유의 오프셋 그림자 */
 }
 
-body.invert-mode .btn-brutal-full {
-    background-color: var(--color-accent);
-    color: #0A0A0A;
+.btn-brutal-full:active {
+    transform: translate(0, 0);
+    box-shadow: 0 0 0 transparent;
 }
 
 .admin-header-title {

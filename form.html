@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>프로젝트 관리 - YOONZDA</title>
-    <link rel="icon" type="image/png" href="/images/logo-icon.png">
+    <link rel="icon" type="image/png" href="images/logo-icon.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -23,7 +23,7 @@
     <!-- 상단 내비게이션 바 -->
     <header>
         <a href="/" class="logo" id="home-link">
-            <img src="/images/logo-icon.png" alt="YOONZDA" class="logo-icon">
+            <img src="images/logo-icon.png" alt="YOONZDA" class="logo-icon">
             <div class="logo-text-group">
                 <span class="logo-title">yoonzda<span class="logo-dot">.</span></span>
                 <span class="logo-subtitle">Creative Web Developer</span>
@@ -41,9 +41,15 @@
     <main class="main-content">
         
         <div id="admin-panel" class="admin-panel-container">
-            <div class="admin-title-row">
-                <div>
-                    <span class="project-category" id="form-category-label">NEW ENTRY</span>
+            <div class="admin-title-row" style="flex-direction: column; align-items: flex-start; gap: 0.8rem; margin-bottom: 2rem;">
+                <a href="/list.html" id="btn-back-to-list" class="btn-simple-action" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0; text-decoration: none; font-size: 0.9rem; letter-spacing: 0.05em; line-height: 1;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px; flex-shrink: 0; display: block; transform: translateY(0.5px);">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    <span style="line-height: 1;">목록으로</span>
+                </a>
+                <div style="margin-top: 0.5rem;">
+                    <span class="project-category" id="form-category-label" style="margin-bottom: 0.5rem;">NEW ENTRY</span>
                     <h1 class="project-title admin-header-title" id="form-action-title">프로젝트 등록</h1>
                 </div>
             </div>
@@ -118,18 +124,16 @@
                     <textarea id="description" class="textarea-brutal" required></textarea>
                 </div>
 
-                <div class="form-actions-row">
-                    <button type="submit" id="btn-submit" class="btn-brutal btn-brutal-full">저장하기</button>
-                </div>
+                <!-- 저장 버튼은 하단 플로팅 바에 위치함 -->
             </form>
         </div>
     </main>
 
-    <!-- 하단 플로팅 액션 바 (목록 복귀용) -->
+    <!-- 하단 플로팅 액션 바 (저장하기용) -->
     <div class="floating-action-bar" id="form-floating-bar">
-        <button id="btn-back-to-list" class="btn-floating-pill">
+        <button type="submit" form="project-form" id="btn-submit" class="btn-floating-pill">
             <span class="btn-dot-glow"></span>
-            목록으로
+            <span id="btn-submit-text">저장하기</span>
         </button>
     </div>
 
@@ -286,7 +290,7 @@
             if (isEdit) {
                 document.getElementById('form-category-label').innerText = 'PROJECT DETAIL';
                 document.getElementById('form-action-title').innerText = '프로젝트 상세 정보';
-                document.getElementById('btn-submit').innerText = '상세 정보 저장';
+                document.getElementById('btn-submit-text').innerText = '저장하기';
                 document.getElementById('projectId').value = projectId;
                 loadProjectDetails(projectId);
             }

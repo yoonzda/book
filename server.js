@@ -169,7 +169,7 @@ const compileStaticPages = () => {
             .replace(/{{PROJECT_NUM}}/g, num)
             .replace(/{{CATEGORY_META_HTML}}/g, categoryMetaHtml)
             .replace(/{{DESCRIPTION}}/g, proj.description)
-            .replace(/{{IMAGE}}/g, proj.imageUrl)
+            .replace(/{{IMAGE}}/g, proj.imageUrl.startsWith('http') || proj.imageUrl.startsWith('/') ? proj.imageUrl : `../${proj.imageUrl}`)
             .replace(/{{PERIOD}}/g, formattedDate)
             .replace(/{{CONTRIBUTION}}/g, proj.contribution || '100%')
             .replace(/{{ROLE}}/g, proj.role || 'Personal')
