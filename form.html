@@ -41,16 +41,20 @@
     <main class="main-content">
         
         <div id="admin-panel" class="admin-panel-container">
-            <div class="admin-title-row" style="flex-direction: column; align-items: flex-start; gap: 0.8rem; margin-bottom: 2rem;">
-                <a href="/list.html" id="btn-back-to-list" class="btn-simple-action" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0; text-decoration: none; font-size: 0.9rem; letter-spacing: 0.05em; line-height: 1;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px; flex-shrink: 0; display: block; transform: translateY(0.5px);">
-                        <polyline points="15 18 9 12 15 6"></polyline>
-                    </svg>
-                    <span style="line-height: 1;">목록으로</span>
-                </a>
-                <div style="margin-top: 0.5rem;">
-                    <span class="project-category" id="form-category-label" style="margin-bottom: 0.5rem;">NEW ENTRY</span>
+            <div class="admin-title-row">
+                <div>
+                    <span class="project-category" id="form-category-label">NEW ENTRY</span>
                     <h1 class="project-title admin-header-title" id="form-action-title">프로젝트 등록</h1>
+                </div>
+                <div class="admin-action-group">
+                    <a href="/list.html" class="btn-back-arrow" id="btn-back-to-list" aria-label="목록으로 이동">
+                        <span class="arrow-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 1.6rem; height: 1.6rem; display: block;">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                        </span>
+                        <span class="arrow-text">목록으로</span>
+                    </a>
                 </div>
             </div>
             

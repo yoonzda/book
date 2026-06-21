@@ -324,6 +324,55 @@ body.invert-mode .form-container-card {
     margin-left: 0.8rem;
 }
 
+/* 백 화살표 목록 복귀 버튼 */
+.btn-back-arrow {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--color-text);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    font-family: var(--font-ui);
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.btn-back-arrow:hover {
+    color: var(--color-accent);
+}
+
+.btn-back-arrow .arrow-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-back-arrow:hover .arrow-icon {
+    transform: translateX(-4px);
+}
+
+.btn-back-arrow .arrow-text {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: max-width 0.9s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease-out, margin-left 0.9s cubic-bezier(0.25, 1, 0.5, 1);
+    margin-left: 0;
+}
+
+.btn-back-arrow:hover .arrow-text {
+    max-width: 6.8rem;
+    opacity: 1;
+    margin-left: 0.8rem;
+}
+
 /* 관리자 카드 목록 및 드래그 앤 드롭 스타일 */
 .admin-cards-list {
     display: flex;
