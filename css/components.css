@@ -704,7 +704,6 @@ body.invert-mode .radio-custom {
 .project-actions-group {
     display: flex;
     gap: 2.2rem;
-    margin-top: 1.8rem;
 }
 
 .project-actions-group .btn-brutal {
