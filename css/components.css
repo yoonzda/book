@@ -732,21 +732,17 @@ body.invert-mode .project-actions-group .btn-brutal {
 }
 
 .project-actions-group .btn-brutal:hover {
-    background-color: var(--color-accent);
-    color: #0A0A0A;
+    background-color: rgba(255, 90, 0, 0.05);
+    color: var(--color-accent);
     border-color: var(--color-accent);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(255, 90, 0, 0.2);
+    transform: translate(-3px, -3px);
+    box-shadow: 3px 3px 0 var(--color-accent);
 }
 
 /* 호버 시 내부 아이콘 애니메이션 */
 .project-actions-group .btn-brutal .btn-icon {
     margin-left: 0.5rem;
-    transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), stroke 0.35s ease;
-}
-
-.project-actions-group .btn-brutal:hover .btn-icon {
-    stroke: #0A0A0A;
+    transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* 상세보기(상세내용) 화살표: 오른쪽 슬라이드 */
