@@ -26,15 +26,12 @@ body {
 .scroll-container {
     height: 100dvh;
     overflow-y: auto;
-    scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
+    /* JS 커스텀 감속 스크롤 제어를 위해 브라우저 기본 스냅 및 behavior 비활성화 */
 }
 
 .project-section {
     height: 100dvh;
     width: 100%;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

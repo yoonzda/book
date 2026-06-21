@@ -699,3 +699,62 @@ body.invert-mode .radio-custom {
     transform: translate(-50%, -50%);
     box-shadow: none; /* 글로우(발광) 삭제로 깔끔하고 진하지 않은 도트 구현 */
 }
+
+/* 프로젝트 본문 내 행동 유도 버튼 그룹 */
+.project-actions-group {
+    display: flex;
+    gap: 1.2rem;
+    margin-top: 2rem;
+}
+
+.project-actions-group .btn-brutal {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 2rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-family: var(--font-ui);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background-color: rgba(255, 255, 255, 0.02);
+    color: var(--color-text);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    text-decoration: none;
+}
+
+body.invert-mode .project-actions-group .btn-brutal {
+    border-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.project-actions-group .btn-brutal:hover {
+    background-color: var(--color-accent);
+    color: #0A0A0A;
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 90, 0, 0.2);
+}
+
+/* 호버 시 내부 아이콘 애니메이션 */
+.project-actions-group .btn-brutal .btn-icon {
+    margin-left: 0.5rem;
+    transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), stroke 0.35s ease;
+}
+
+.project-actions-group .btn-brutal:hover .btn-icon {
+    stroke: #0A0A0A;
+}
+
+/* 상세보기(상세내용) 화살표: 오른쪽 슬라이드 */
+.project-actions-group .btn-detail-view:hover .btn-icon {
+    transform: translateX(4px);
+}
+
+/* 운영 사이트(사이트 이동) 화살표: 우상단 대각선 슬라이드 */
+.project-actions-group .btn-live-site:hover .btn-icon {
+    transform: translate(3px, -3px);
+}

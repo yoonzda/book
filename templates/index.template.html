@@ -163,6 +163,129 @@
                 localStorage.setItem('theme-invert', document.body.classList.contains('invert-mode'));
             });
 
+            // -----------------------------------------
+            // 5. 부드러운 감속 휠 스냅 스크롤링 ("부웅 착")
+            // -----------------------------------------
+            const scrollContainer = document.querySelector('.scroll-container');
+            const projectSections = document.querySelectorAll('.project-section');
+            
+            let isDesktop = window.innerWidth > 768;
+            let currentIdx = 0;
+            let isAnimating = false;
+
+            window.addEventListener('resize', () => {
+                isDesktop = window.innerWidth > 768;
+                if (isDesktop && !isAnimating && projectSections[currentIdx]) {
+                    scrollContainer.scrollTop = projectSections[currentIdx].offsetTop;
+                }
+            });
+
+            // 현재 스크롤 위치를 바탕으로 초기 index 판단 (새로고침 대응)
+            function initCurrentIndex() {
+                if (!scrollContainer || projectSections.length === 0) return;
+                const scrollTop = scrollContainer.scrollTop;
+                let closestIdx = 0;
+                let minDiff = Infinity;
+                projectSections.forEach((sec, idx) => {
+                    const diff = Math.abs(sec.offsetTop - scrollTop);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        closestIdx = idx;
+                    }
+                });
+                currentIdx = closestIdx;
+                scrollContainer.scrollTop = projectSections[currentIdx].offsetTop;
+            }
+
+            if (isDesktop) {
+                setTimeout(initCurrentIndex, 100);
+            }
+
+            // 휠 이벤트 가로채기
+            scrollContainer.addEventListener('wheel', (e) => {
+                if (!isDesktop) return; 
+                
+                e.preventDefault(); 
+                if (isAnimating) return; 
+                
+                if (e.deltaY > 10) {
+                    if (currentIdx < projectSections.length - 1) {
+                        currentIdx++;
+                        smoothScrollToSection(currentIdx);
+                    }
+                } else if (e.deltaY < -10) {
+                    if (currentIdx > 0) {
+                        currentIdx--;
+                        smoothScrollToSection(currentIdx);
+                    }
+                }
+            }, { passive: false });
+
+            // 키보드 키 지원
+            window.addEventListener('keydown', (e) => {
+                if (!isDesktop) return;
+                if (isAnimating) return;
+                
+                if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+                    e.preventDefault();
+                    if (currentIdx < projectSections.length - 1) {
+                        currentIdx++;
+                        smoothScrollToSection(currentIdx);
+                    }
+                } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                    e.preventDefault();
+                    if (currentIdx > 0) {
+                        currentIdx--;
+                        smoothScrollToSection(currentIdx);
+                    }
+                } else if (e.key === 'Spacebar' || e.key === ' ') {
+                    e.preventDefault();
+                    if (e.shiftKey) {
+                        if (currentIdx > 0) {
+                            currentIdx--;
+                            smoothScrollToSection(currentIdx);
+                        }
+                    } else {
+                        if (currentIdx < projectSections.length - 1) {
+                            currentIdx++;
+                            smoothScrollToSection(currentIdx);
+                        }
+                    }
+                }
+            });
+
+            function smoothScrollToSection(index) {
+                if (!projectSections[index]) return;
+                isAnimating = true;
+                const start = scrollContainer.scrollTop;
+                const target = projectSections[index].offsetTop;
+                const change = target - start;
+                let currentTime = 0;
+                const duration = 850; // "부웅" 가며 적절히 느슨하게 도착하는 850ms
+                
+                // cubic-bezier(0.25, 1, 0.5, 1)와 유사한 EaseOutQuart 감속
+                function easeOutQuart(t, b, c, d) {
+                    t /= d;
+                    t--;
+                    return -c * (t * t * t * t - 1) + b;
+                }
+                
+                const frameRate = 16;
+                function animate() {
+                    currentTime += frameRate;
+                    const val = easeOutQuart(currentTime, start, change, duration);
+                    scrollContainer.scrollTop = val;
+                    
+                    if (currentTime < duration) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        scrollContainer.scrollTop = target;
+                        isAnimating = false;
+                    }
+                }
+                requestAnimationFrame(animate);
+            }
+
         });
     </script>
 </body>
