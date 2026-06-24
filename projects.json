@@ -40,5 +40,25 @@
     "role": "3D Interaction Engineer",
     "techStack": "Three.js, WebGL, GLSL Shaders, GSAP",
     "link": "https://example.com"
+  },
+  {
+    "id": "project_1782317016195",
+    "title": "반응형 포트폴리오 사이트",
+    "category": "",
+    "description": "브루탈리즘 웹 디자인 가이드라인을 엄격히 준수하며 미니멀하고 생동감 넘치는 반응형 사용자 인터페이스를 제작했습니다.",
+    "imageUrl": "images/uploads/upload_1782317016194.png",
+    "startDate": "2026.04",
+    "endDate": "",
+    "dateDisplayMode": "ongoing",
+    "contribution": "100%",
+    "role": "1인 개발",
+    "techStack": "HTML, CSS, Vanilla JS",
+    "link": "http://localhost:3000",
+    "projectType": "개인 프로젝트",
+    "githubLink": "https://github.com/example/repo",
+    "figmaLink": "https://figma.com/file/example",
+    "notionLink": "https://notion.so/example",
+    "subtitle": "바닐라 JS와 브루탈리즘 테마로 구축한 포트폴리오 사이트",
+    "troubleshooting": "Base64 이미지 디코딩 서버 로직 및 SVG 통합을 통한 로딩 최적화 달성."
   }
 ]

@@ -65,64 +65,131 @@
                     <label for="title" class="label-brutal">프로젝트 제목</label>
                     <input type="text" id="title" class="input-brutal" required>
                 </div>
-                <div class="form-group">
-                    <label for="category" class="label-brutal">분야 (선택)</label>
-                    <input type="text" id="category" class="input-brutal">
-                </div>
-                <div class="form-group">
-                    <label for="imageUrl" class="label-brutal">이미지 주소 (URL)</label>
-                    <input type="text" id="imageUrl" class="input-brutal" required>
-                </div>
                 
+                <div class="form-group" id="project-period-row">
+                    <label for="startYear" class="label-brutal">프로젝트 기간</label>
+                    <div class="period-control-group">
+                        <!-- 시작일 그룹 -->
+                        <div class="date-select-group" id="start-date-group">
+                            <select id="startYear" class="select-brutal" required>
+                                <option value="" disabled selected>연도</option>
+                            </select>
+                            <select id="startMonth" class="select-brutal" required>
+                                <option value="" disabled selected>월</option>
+                            </select>
+                        </div>
+                        
+                        <!-- 구분선 ~ -->
+                        <span class="period-separator" id="period-separator">~</span>
+                        
+                        <!-- 완료일 그룹 -->
+                        <div class="date-select-group" id="end-date-group">
+                            <select id="endYear" class="select-brutal">
+                                <option value="" disabled selected>연도</option>
+                            </select>
+                            <select id="endMonth" class="select-brutal">
+                                <option value="" disabled selected>월</option>
+                            </select>
+                        </div>
+                        
+                        <!-- 진행 중 배지 -->
+                        <span class="ongoing-badge hidden" id="ongoing-badge">진행 중</span>
+                    </div>
+                </div>
+
                 <!-- 기간 노출 방식 선택 (라디오 버튼) -->
                 <div class="form-group">
-                    <span class="label-brutal">기간 노출 방식</span>
+                    <label for="dateDisplayMode-period" class="label-brutal">기간 노출 방식</label>
                     <div class="radio-group-brutal">
-                        <label class="radio-label-brutal">
-                            <input type="radio" name="dateDisplayMode" value="period" checked>
+                        <label class="radio-label-brutal" for="dateDisplayMode-period">
+                            <input type="radio" id="dateDisplayMode-period" name="dateDisplayMode" value="period" checked>
                             <span class="radio-custom"></span>
                             기간
                         </label>
-                        <label class="radio-label-brutal">
-                            <input type="radio" name="dateDisplayMode" value="ongoing">
+                        <label class="radio-label-brutal" for="dateDisplayMode-ongoing">
+                            <input type="radio" id="dateDisplayMode-ongoing" name="dateDisplayMode" value="ongoing">
                             <span class="radio-custom"></span>
                             진행 중
                         </label>
-                        <label class="radio-label-brutal">
-                            <input type="radio" name="dateDisplayMode" value="single">
+                        <label class="radio-label-brutal" for="dateDisplayMode-single">
+                            <input type="radio" id="dateDisplayMode-single" name="dateDisplayMode" value="single">
                             <span class="radio-custom"></span>
                             단일
                         </label>
                     </div>
                 </div>
-                
-                <div class="form-row-date">
-                    <div class="form-group col-date" id="group-start-date">
-                        <label for="startDate" class="label-brutal" id="label-start-date">시작일</label>
-                        <input type="text" id="startDate" class="input-brutal date-mask" placeholder="YYYY.MM" maxlength="7" required>
-                    </div>
-                    <div class="form-group col-date" id="group-end-date">
-                        <label for="endDate" class="label-brutal" id="label-end-date">완료일</label>
-                        <input type="text" id="endDate" class="input-brutal date-mask" placeholder="YYYY.MM" maxlength="7">
-                    </div>
+
+                <div class="form-group">
+                    <label for="projectType" class="label-brutal">프로젝트 분류</label>
+                    <select id="projectType" class="select-brutal" required>
+                        <option value="" disabled selected>선택해 주세요</option>
+                        <option value="개인 프로젝트">개인 프로젝트</option>
+                        <option value="팀 프로젝트">팀 프로젝트</option>
+                        <option value="사내 업무">사내 업무</option>
+                        <option value="외주">외주</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="contribution" class="label-brutal">기여도</label>
-                    <input type="text" id="contribution" class="input-brutal" required>
-                </div>
-                <div class="form-group">
-                    <label for="role" class="label-brutal">역할</label>
+                    <label for="role" class="label-brutal">프로젝트 역할</label>
                     <input type="text" id="role" class="input-brutal" required>
                 </div>
+
+                <div class="form-group">
+                    <label for="contribution" class="label-brutal">프로젝트 기여도</label>
+                    <input type="text" id="contribution" class="input-brutal" required>
+                </div>
+
                 <div class="form-group">
                     <label for="techStack" class="label-brutal">기술 스택</label>
                     <input type="text" id="techStack" class="input-brutal" required>
                 </div>
+
                 <div class="form-group">
-                    <label for="link" class="label-brutal">링크 (선택)</label>
+                    <label for="link" class="label-brutal">프로젝트 링크</label>
                     <input type="text" id="link" class="input-brutal">
                 </div>
+
+                <div class="form-group">
+                    <label for="githubLink" class="label-brutal">깃허브 링크</label>
+                    <input type="text" id="githubLink" class="input-brutal">
+                </div>
+
+                <div class="form-group">
+                    <label for="figmaLink" class="label-brutal">피그마 링크</label>
+                    <input type="text" id="figmaLink" class="input-brutal">
+                </div>
+
+                <div class="form-group">
+                    <label for="notionLink" class="label-brutal">노션 링크</label>
+                    <input type="text" id="notionLink" class="input-brutal">
+                </div>
+
+                <div class="form-group">
+                    <label for="imageFile" class="label-brutal">이미지 등록</label>
+                    <div class="file-upload-wrapper">
+                        <div class="file-upload-row">
+                            <input type="file" id="imageFile" accept="image/*" class="file-input-hidden" style="display: none;">
+                            <button type="button" class="btn-brutal btn-file-trigger" onclick="document.getElementById('imageFile').click()">파일 선택</button>
+                            <span class="file-name-display" id="file-name-display">선택된 파일 없음</span>
+                        </div>
+                        <input type="hidden" id="imageUrl">
+                        <div class="image-preview-box hidden" id="image-preview-box">
+                            <img src="" id="image-preview" alt="미리보기">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="subtitle" class="label-brutal">한 줄 요약</label>
+                    <input type="text" id="subtitle" class="input-brutal" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="troubleshooting" class="label-brutal">문제 해결 및 성과</label>
+                    <textarea id="troubleshooting" class="textarea-brutal"></textarea>
+                </div>
+
                 <div class="form-group">
                     <label for="description" class="label-brutal">상세 설명</label>
                     <textarea id="description" class="textarea-brutal" required></textarea>
@@ -216,57 +283,106 @@
                 document.body.classList.toggle('invert-mode');
                 localStorage.setItem('theme-invert', document.body.classList.contains('invert-mode'));
             });
+            // -----------------------------------------
+            // 3-2. 이미지 파일 업로드 & 미리보기 로직
+            // -----------------------------------------
+            const imageFile = document.getElementById('imageFile');
+            const fileNameDisplay = document.getElementById('file-name-display');
+            const imageUrlInput = document.getElementById('imageUrl');
+            const imagePreviewBox = document.getElementById('image-preview-box');
+            const imagePreview = document.getElementById('image-preview');
 
-            // -----------------------------------------
-            // 4. 날짜 자동 하이픈 마스크 (YYYY-MM)
-            // -----------------------------------------
-            const dateInputs = document.querySelectorAll('.date-mask');
-            dateInputs.forEach(input => {
-                input.addEventListener('input', (e) => {
-                    let val = e.target.value.replace(/[^0-9]/g, '');
-                    let formatted = '';
-                    if (val.length > 0) {
-                        formatted += val.substring(0, 4);
-                    }
-                    if (val.length > 4) {
-                        formatted += '.' + val.substring(4, 6);
-                    }
-                    e.target.value = formatted;
-                });
+            imageFile.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    fileNameDisplay.innerText = file.name;
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        imageUrlInput.value = event.target.result; // Base64 data URL
+                        imagePreview.src = event.target.result;
+                        imagePreviewBox.classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    fileNameDisplay.innerText = '선택된 파일 없음';
+                    imageUrlInput.value = '';
+                    imagePreview.src = '';
+                    imagePreviewBox.classList.add('hidden');
+                }
             });
 
             // -----------------------------------------
-            // 4-2. 날짜 입력 필드 노출 제어 로직
+            // 4. 연도 및 월 셀렉트 박스 동적 생성
             // -----------------------------------------
-            const groupStartDate = document.getElementById('group-start-date');
-            const groupEndDate = document.getElementById('group-end-date');
-            const inputStartDate = document.getElementById('startDate');
-            const inputEndDate = document.getElementById('endDate');
-            const labelStartDate = document.getElementById('label-start-date');
-            const labelEndDate = document.getElementById('label-end-date');
+            const startYearSelect = document.getElementById('startYear');
+            const endYearSelect = document.getElementById('endYear');
+            const startMonthSelect = document.getElementById('startMonth');
+            const endMonthSelect = document.getElementById('endMonth');
+            
+            const currentYear = new Date().getFullYear();
+            
+            // 2015년부터 현재 연도 + 5년까지 생성 (역순)
+            for (let y = currentYear + 5; y >= 2015; y--) {
+                const optStart = new Option(`${y}년`, y);
+                const optEnd = new Option(`${y}년`, y);
+                startYearSelect.add(optStart);
+                endYearSelect.add(optEnd);
+            }
+            
+            // 1월부터 12월까지 생성 (앞에 0 패딩)
+            for (let m = 1; m <= 12; m++) {
+                const mStr = String(m).padStart(2, '0');
+                const optStart = new Option(`${m}월`, mStr);
+                const optEnd = new Option(`${m}월`, mStr);
+                startMonthSelect.add(optStart);
+                endMonthSelect.add(optEnd);
+            }
+
+            // -----------------------------------------
+            // 4-2. 날짜 입력 필드 노출 제어 로직 (셀렉트 박스 방식)
+            // -----------------------------------------
+            const startDateGroup = document.getElementById('start-date-group');
+            const endDateGroup = document.getElementById('end-date-group');
+            const periodSeparator = document.getElementById('period-separator');
+            const ongoingBadge = document.getElementById('ongoing-badge');
 
             function updateDateFieldsVisibility(mode) {
                 if (mode === 'period') {
-                    groupStartDate.classList.remove('hidden');
-                    groupEndDate.classList.remove('hidden');
-                    inputStartDate.required = true;
-                    inputEndDate.required = false;
-                    labelStartDate.innerText = '시작일';
-                    labelEndDate.innerText = '완료일';
+                    startDateGroup.classList.remove('hidden');
+                    endDateGroup.classList.remove('hidden');
+                    periodSeparator.classList.remove('hidden');
+                    ongoingBadge.classList.add('hidden');
+                    
+                    startYearSelect.required = true;
+                    startMonthSelect.required = true;
+                    endYearSelect.required = true;
+                    endMonthSelect.required = true;
                 } else if (mode === 'ongoing') {
-                    groupStartDate.classList.remove('hidden');
-                    groupEndDate.classList.add('hidden');
-                    inputStartDate.required = true;
-                    inputEndDate.required = false;
-                    inputEndDate.value = '';
-                    labelStartDate.innerText = '시작일';
+                    startDateGroup.classList.remove('hidden');
+                    endDateGroup.classList.add('hidden');
+                    periodSeparator.classList.remove('hidden');
+                    ongoingBadge.classList.remove('hidden');
+                    
+                    startYearSelect.required = true;
+                    startMonthSelect.required = true;
+                    endYearSelect.required = false;
+                    endMonthSelect.required = false;
+                    
+                    endYearSelect.value = '';
+                    endMonthSelect.value = '';
                 } else if (mode === 'single') {
-                    groupStartDate.classList.add('hidden');
-                    groupEndDate.classList.remove('hidden');
-                    inputStartDate.required = false;
-                    inputEndDate.required = true;
-                    inputStartDate.value = '';
-                    labelEndDate.innerText = '완료일';
+                    startDateGroup.classList.add('hidden');
+                    endDateGroup.classList.remove('hidden');
+                    periodSeparator.classList.add('hidden');
+                    ongoingBadge.classList.add('hidden');
+                    
+                    startYearSelect.required = false;
+                    startMonthSelect.required = false;
+                    endYearSelect.required = true;
+                    endMonthSelect.required = true;
+                    
+                    startYearSelect.value = '';
+                    startMonthSelect.value = '';
                 }
             }
 
@@ -306,10 +422,31 @@
                     const proj = projects.find(p => p.id === id);
                     if (proj) {
                         document.getElementById('title').value = proj.title || '';
-                        document.getElementById('category').value = proj.category || '';
-                        document.getElementById('imageUrl').value = proj.imageUrl || '';
-                        document.getElementById('startDate').value = (proj.startDate || '').replace(/-/g, '.');
-                        document.getElementById('endDate').value = (proj.endDate || '').replace(/-/g, '.');
+                        
+                        if (proj.imageUrl) {
+                            document.getElementById('imageUrl').value = proj.imageUrl;
+                            document.getElementById('image-preview').src = proj.imageUrl;
+                            document.getElementById('image-preview-box').classList.remove('hidden');
+                            document.getElementById('file-name-display').innerText = '기존 이미지';
+                        }
+
+                        document.getElementById('projectType').value = proj.projectType || '';
+                        document.getElementById('githubLink').value = proj.githubLink || '';
+                        document.getElementById('figmaLink').value = proj.figmaLink || '';
+                        document.getElementById('notionLink').value = proj.notionLink || '';
+                        document.getElementById('subtitle').value = proj.subtitle || '';
+                        document.getElementById('troubleshooting').value = proj.troubleshooting || '';
+                        
+                        if (proj.startDate) {
+                            const [sYear, sMonth] = proj.startDate.replace(/-/g, '.').split('.');
+                            document.getElementById('startYear').value = sYear || '';
+                            document.getElementById('startMonth').value = sMonth || '';
+                        }
+                        if (proj.endDate) {
+                            const [eYear, eMonth] = proj.endDate.replace(/-/g, '.').split('.');
+                            document.getElementById('endYear').value = eYear || '';
+                            document.getElementById('endMonth').value = eMonth || '';
+                        }
                         
                         const mode = proj.dateDisplayMode || 'period';
                         const radio = document.querySelector(`input[name="dateDisplayMode"][value="${mode}"]`);
@@ -346,54 +483,96 @@
                 
                 const id = document.getElementById('projectId').value;
                 const title = document.getElementById('title').value;
-                const category = document.getElementById('category').value;
+                const category = '';
                 const imageUrl = document.getElementById('imageUrl').value;
-                const startDate = document.getElementById('startDate').value;
-                const endDate = document.getElementById('endDate').value;
                 const dateDisplayMode = document.querySelector('input[name="dateDisplayMode"]:checked').value;
 
-                // 날짜 형식 유효성 검사 도우미 함수
-                function validateDate(dateStr) {
-                    if (!dateStr) return false;
-                    const match = dateStr.match(/^(\d{4})\.(\d{2})$/);
-                    if (!match) return false;
-                    const month = parseInt(match[2], 10);
-                    return (month >= 1 && month <= 12);
+                if (!imageUrl) {
+                    alert('이미지를 등록해 주세요.');
+                    document.getElementById('imageFile').click();
+                    return;
                 }
 
-                // 모드별 날짜 유효성 검사 수행
+                const sYear = document.getElementById('startYear').value;
+                const sMonth = document.getElementById('startMonth').value;
+                const eYear = document.getElementById('endYear').value;
+                const eMonth = document.getElementById('endMonth').value;
+
+                let startDate = '';
+                let endDate = '';
+
+                // 모드별 날짜 유효성 검사 및 데이터 가공
                 if (dateDisplayMode === 'period') {
-                    if (!validateDate(startDate)) {
-                        alert('시작일 형식이 올바르지 않습니다. YYYY.MM 형식(예: 2026.04, 월은 01~12)으로 입력해 주세요.');
-                        document.getElementById('startDate').focus();
+                    if (!sYear || !sMonth) {
+                        alert('시작일 연도와 월을 모두 선택해 주세요.');
+                        document.getElementById('startYear').focus();
                         return;
                     }
-                    if (!validateDate(endDate)) {
-                        alert('완료일 형식이 올바르지 않습니다. YYYY.MM 형식(예: 2026.06, 월은 01~12)으로 입력해 주세요.');
-                        document.getElementById('endDate').focus();
+                    if (!eYear || !eMonth) {
+                        alert('완료일 연도와 월을 모두 선택해 주세요.');
+                        document.getElementById('endYear').focus();
                         return;
                     }
+                    
+                    const startVal = parseInt(sYear + sMonth, 10);
+                    const endVal = parseInt(eYear + eMonth, 10);
+                    if (startVal > endVal) {
+                        alert('시작일은 완료일보다 이전이거나 같아야 합니다.');
+                        document.getElementById('startYear').focus();
+                        return;
+                    }
+                    
+                    startDate = `${sYear}.${sMonth}`;
+                    endDate = `${eYear}.${eMonth}`;
                 } else if (dateDisplayMode === 'ongoing') {
-                    if (!validateDate(startDate)) {
-                        alert('시작일 형식이 올바르지 않습니다. YYYY.MM 형식(예: 2026.04, 월은 01~12)으로 입력해 주세요.');
-                        document.getElementById('startDate').focus();
+                    if (!sYear || !sMonth) {
+                        alert('시작일 연도와 월을 선택해 주세요.');
+                        document.getElementById('startYear').focus();
                         return;
                     }
+                    startDate = `${sYear}.${sMonth}`;
+                    endDate = '';
                 } else if (dateDisplayMode === 'single') {
-                    if (!validateDate(endDate)) {
-                        alert('완료일 형식이 올바르지 않습니다. YYYY.MM 형식(예: 2026.06, 월은 01~12)으로 입력해 주세요.');
-                        document.getElementById('endDate').focus();
+                    if (!eYear || !eMonth) {
+                        alert('완료일 연도와 월을 선택해 주세요.');
+                        document.getElementById('endYear').focus();
                         return;
                     }
+                    startDate = '';
+                    endDate = `${eYear}.${eMonth}`;
                 }
 
-                const contribution = document.getElementById('contribution').value;
+                const projectType = document.getElementById('projectType').value;
                 const role = document.getElementById('role').value;
+                const contribution = document.getElementById('contribution').value;
                 const techStack = document.getElementById('techStack').value;
                 const link = document.getElementById('link').value;
+                const githubLink = document.getElementById('githubLink').value;
+                const figmaLink = document.getElementById('figmaLink').value;
+                const notionLink = document.getElementById('notionLink').value;
+                const subtitle = document.getElementById('subtitle').value;
+                const troubleshooting = document.getElementById('troubleshooting').value;
                 const description = document.getElementById('description').value;
 
-                const payload = { title, category, imageUrl, startDate, endDate, dateDisplayMode, contribution, role, techStack, link, description };
+                const payload = { 
+                    title, 
+                    category, 
+                    imageUrl, 
+                    startDate, 
+                    endDate, 
+                    dateDisplayMode, 
+                    projectType,
+                    role, 
+                    contribution, 
+                    techStack, 
+                    link, 
+                    githubLink,
+                    figmaLink,
+                    notionLink,
+                    subtitle,
+                    troubleshooting,
+                    description 
+                };
 
                 const url = isEdit ? `/api/projects/${id}` : '/api/projects';
                 const method = isEdit ? 'PUT' : 'POST';

@@ -166,8 +166,10 @@
 
                 if (mode === 'period') {
                     const formattedStart = formatDots(start);
-                    const formattedEnd = (end.toLowerCase() === 'ongoing' || end === '진행 중' || !end) ? 'ONGOING' : formatDots(end);
-                    return `${formattedStart} - ${formattedEnd}`;
+                    if (end.toLowerCase() === 'ongoing' || end === '진행 중' || !end) {
+                        return `${formattedStart} ~`;
+                    }
+                    return `${formattedStart} - ${formatDots(end)}`;
                 } else if (mode === 'ongoing') {
                     return `${formatDots(start)} ~`;
                 } else {

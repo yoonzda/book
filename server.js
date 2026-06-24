@@ -49,10 +49,10 @@ const formatProjectDate = (proj) => {
 
     if (mode === 'period') {
         const formattedStart = formatDots(start);
-        const formattedEnd = (end.toLowerCase() === 'ongoing' || end === '진행 중' || !end)
-            ? 'ONGOING'
-            : formatDots(end);
-        return `${formattedStart} - ${formattedEnd}`;
+        if (end.toLowerCase() === 'ongoing' || end === '진행 중' || !end) {
+            return `${formattedStart} ~`;
+        }
+        return `${formattedStart} - ${formatDots(end)}`;
     } else if (mode === 'ongoing') {
         return `${formatDots(start)} ~`;
     } else {
@@ -64,6 +64,40 @@ const formatProjectDate = (proj) => {
             return `${parts[0]}.${parts[1]}`;
         }
         return formatDots(targetDate);
+    }
+};
+
+// --- Base64 이미지 파일 저장 도우미 함수 ---
+const saveBase64Image = (base64Str) => {
+    if (!base64Str) return '';
+    // 만약 이미 로컬 파일 경로이거나 외부 URL인 경우 그대로 반환
+    if (!base64Str.startsWith('data:image')) {
+        return base64Str;
+    }
+    
+    try {
+        const matches = base64Str.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+        if (!matches || matches.length !== 3) {
+            throw new Error('올바르지 않은 base64 형식입니다.');
+        }
+        
+        const ext = matches[1].split('/')[1] || 'png';
+        const buffer = Buffer.from(matches[2], 'base64');
+        
+        // uploads 폴더 보장
+        const uploadsDir = path.join(__dirname, 'images', 'uploads');
+        if (!fs.existsSync(uploadsDir)) {
+            fs.mkdirSync(uploadsDir, { recursive: true });
+        }
+        
+        const fileName = `upload_${Date.now()}.${ext}`;
+        const filePath = path.join(uploadsDir, fileName);
+        fs.writeFileSync(filePath, buffer);
+        
+        return `images/uploads/${fileName}`;
+    } catch (err) {
+        console.error('Base64 이미지 저장 에러:', err);
+        return base64Str;
     }
 };
 
@@ -106,7 +140,7 @@ const compileStaticPages = () => {
                                 <a href="projects/${proj.id}.html" class="project-link" data-image="${proj.imageUrl}">${proj.title}</a>
                             </h2>
                         </div>
-                        <p class="project-desc project-card-desc">${proj.description}</p>
+                        <p class="project-desc project-card-desc">${proj.subtitle || proj.description || ''}</p>
                     </div>
                     <footer class="project-footer project-card-footer">
                         <div></div>
@@ -169,22 +203,64 @@ const compileStaticPages = () => {
     projects.forEach((proj, idx) => {
         const num = String(idx + 1).padStart(2, '0');
         const formattedDate = formatProjectDate(proj);
-        const categoryMetaHtml = proj.category ? `
+        
+        // 1. 프로젝트 분류 (Type) 렌더링
+        const projectTypeHtml = proj.projectType ? `
                         <div>
-                            <span class="project-meta-label project-meta-sublabel">CATEGORY</span>
-                            <span class="project-meta-value">${proj.category}</span>
+                            <span class="project-meta-label project-meta-sublabel">TYPE</span>
+                            <span class="project-meta-value">${proj.projectType}</span>
                         </div>` : '';
+
+        // 2. 통합 링크 버튼군 렌더링 (SVG 로고 포함)
+        let linksHtml = '';
+        if (proj.link) {
+            linksHtml += `
+            <a href="${proj.link}" target="_blank" class="btn-brutal-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+                <span>사이트 이동</span>
+            </a>`;
+        }
+        if (proj.githubLink) {
+            linksHtml += `
+            <a href="${proj.githubLink}" target="_blank" class="btn-brutal-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                <span>GITHUB 보기</span>
+            </a>`;
+        }
+        if (proj.figmaLink) {
+            linksHtml += `
+            <a href="${proj.figmaLink}" target="_blank" class="btn-brutal-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z"></path><path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z"></path><path d="M12 9h3.5a3.5 3.5 0 1 1-3.5 3.5V9z"></path><path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z"></path><path d="M5 18.5A3.5 3.5 0 0 1 8.5 15H12v3.5a3.5 3.5 0 1 1-7 0z"></path></svg>
+                <span>FIGMA 보기</span>
+            </a>`;
+        }
+        if (proj.notionLink) {
+            linksHtml += `
+            <a href="${proj.notionLink}" target="_blank" class="btn-brutal-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><path d="M7 7h3l5 10V7h2M7 17v-3m10 3v-3"></path></svg>
+                <span>NOTION 보기</span>
+            </a>`;
+        }
+
+        // 3. 문제 해결 및 성과 (Troubleshooting) 렌더링
+        const troubleshootingHtml = proj.troubleshooting ? `
+                        <div class="project-troubleshooting-section" style="margin-top: 3rem; border-top: var(--border-stroke); padding-top: 2rem;">
+                            <span class="project-meta-label project-meta-sublabel">TROUBLESHOOTING & IMPACT</span>
+                            <p class="project-desc" style="white-space: pre-wrap; font-size: 1.05rem; line-height: 1.8; margin-top: 0.5rem; max-width: 100%;">${proj.troubleshooting}</p>
+                        </div>` : '';
+
         let html = projectTemplate
             .replace(/{{TITLE}}/g, proj.title)
             .replace(/{{PROJECT_NUM}}/g, num)
-            .replace(/{{CATEGORY_META_HTML}}/g, categoryMetaHtml)
+            .replace(/{{PROJECT_TYPE_HTML}}/g, projectTypeHtml)
             .replace(/{{DESCRIPTION}}/g, proj.description)
             .replace(/{{IMAGE}}/g, proj.imageUrl.startsWith('http') || proj.imageUrl.startsWith('/') ? proj.imageUrl : `../${proj.imageUrl}`)
             .replace(/{{PERIOD}}/g, formattedDate)
             .replace(/{{CONTRIBUTION}}/g, proj.contribution || '100%')
             .replace(/{{ROLE}}/g, proj.role || 'Personal')
             .replace(/{{TECH_STACK}}/g, proj.techStack || 'None')
-            .replace(/{{LINK}}/g, proj.link || '#');
+            .replace(/{{LINKS_HTML}}/g, linksHtml)
+            .replace(/{{TROUBLESHOOTING_HTML}}/g, troubleshootingHtml);
         
         fs.writeFileSync(path.join(projectsDir, `${proj.id}.html`), html, 'utf8');
     });
@@ -201,26 +277,51 @@ app.get('/api/projects', (req, res) => {
 
 // 2. 프로젝트 추가
 app.post('/api/projects', (req, res) => {
-    const { title, category, description, imageUrl, startDate, endDate, dateDisplayMode, contribution, role, techStack, link } = req.body;
+    const { 
+        title, 
+        category, 
+        description, 
+        imageUrl, 
+        startDate, 
+        endDate, 
+        dateDisplayMode, 
+        contribution, 
+        role, 
+        techStack, 
+        link,
+        projectType,
+        githubLink,
+        figmaLink,
+        notionLink,
+        subtitle,
+        troubleshooting
+    } = req.body;
 
-    if (!title || !description || !imageUrl || !startDate || !dateDisplayMode || !contribution || !role || !techStack) {
+    if (!title || !description || !imageUrl || !startDate || !dateDisplayMode || !contribution || !role || !techStack || !projectType || !subtitle) {
         return res.status(400).json({ success: false, message: '필수 필드가 누락되었습니다.' });
     }
 
     const projects = readProjectsData();
+    const savedImageUrl = saveBase64Image(imageUrl);
     const newProject = {
         id: `project_${Date.now()}`,
         title,
         category: category || '',
         description,
-        imageUrl,
+        imageUrl: savedImageUrl,
         startDate,
         endDate: endDate || '',
         dateDisplayMode,
         contribution,
         role,
         techStack,
-        link: link || ''
+        link: link || '',
+        projectType,
+        githubLink: githubLink || '',
+        figmaLink: figmaLink || '',
+        notionLink: notionLink || '',
+        subtitle,
+        troubleshooting: troubleshooting || ''
     };
 
     projects.push(newProject);
@@ -235,9 +336,27 @@ app.post('/api/projects', (req, res) => {
 // 3. 프로젝트 수정
 app.put('/api/projects/:id', (req, res) => {
     const { id } = req.params;
-    const { title, category, description, imageUrl, startDate, endDate, dateDisplayMode, contribution, role, techStack, link } = req.body;
+    const { 
+        title, 
+        category, 
+        description, 
+        imageUrl, 
+        startDate, 
+        endDate, 
+        dateDisplayMode, 
+        contribution, 
+        role, 
+        techStack, 
+        link,
+        projectType,
+        githubLink,
+        figmaLink,
+        notionLink,
+        subtitle,
+        troubleshooting
+    } = req.body;
 
-    if (!title || !description || !imageUrl || !startDate || !dateDisplayMode || !contribution || !role || !techStack) {
+    if (!title || !description || !imageUrl || !startDate || !dateDisplayMode || !contribution || !role || !techStack || !projectType || !subtitle) {
         return res.status(400).json({ success: false, message: '필수 필드가 누락되었습니다.' });
     }
 
@@ -248,19 +367,26 @@ app.put('/api/projects/:id', (req, res) => {
         return res.status(404).json({ success: false, message: '해당 프로젝트를 찾을 수 없습니다.' });
     }
 
+    const savedImageUrl = saveBase64Image(imageUrl);
     projects[index] = {
         ...projects[index],
         title,
         category: category || '',
         description,
-        imageUrl,
+        imageUrl: savedImageUrl,
         startDate,
         endDate: endDate || '',
         dateDisplayMode,
         contribution,
         role,
         techStack,
-        link: link || ''
+        link: link || '',
+        projectType,
+        githubLink: githubLink || '',
+        figmaLink: figmaLink || '',
+        notionLink: notionLink || '',
+        subtitle,
+        troubleshooting: troubleshooting || ''
     };
 
     if (writeProjectsData(projects)) {
