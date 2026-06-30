@@ -100,7 +100,7 @@
 
 .btn-brutal:hover {
     background-color: var(--color-accent);
-    color: #0A0A0A;
+    color: #FFFFFF;
     border-color: var(--color-accent);
 }
 
@@ -118,13 +118,18 @@
 }
 
 .form-group .label-brutal {
-    flex: 0 0 20%;
+    flex: 0 0 10%;
+    min-width: 140px;
+    white-space: nowrap;
     margin-bottom: 0;
 }
 
 .form-group .input-brutal,
 .form-group .textarea-brutal,
-.form-group .radio-group-brutal {
+.form-group .select-brutal,
+.form-group .radio-group-brutal,
+.form-group .period-control-group,
+.form-group .file-upload-wrapper {
     flex: 1;
 }
 
@@ -158,7 +163,10 @@
     
     .form-group .input-brutal,
     .form-group .textarea-brutal,
-    .form-group .radio-group-brutal {
+    .form-group .select-brutal,
+    .form-group .radio-group-brutal,
+    .form-group .period-control-group,
+    .form-group .file-upload-wrapper {
         width: 100%;
         flex: 0 0 auto;
     }
@@ -284,7 +292,7 @@ footer.project-footer {
 
 .btn-brutal-full:hover {
     background-color: var(--color-accent);
-    color: #0A0A0A;
+    color: #FFFFFF;
     border-color: var(--color-accent);
     transform: translate(-4px, -4px); /* 대각선 방향으로 이동 */
     box-shadow: 4px 4px 0 var(--color-text); /* 브루탈리스트 고유의 오프셋 그림자 */
@@ -924,6 +932,24 @@ body.invert-mode .ongoing-badge {
         text-align: center;
         padding: 0;
     }
+
+    .file-upload-container {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .btn-file-trigger,
+    .image-preview-box,
+    .file-name-display {
+        grid-column: auto;
+        grid-row: auto;
+    }
+    
+    .image-preview-box {
+        max-width: 100%;
+    }
 }
 
 /* 파일 업로드 스타일 */
@@ -934,14 +960,23 @@ body.invert-mode .ongoing-badge {
     width: 100%;
 }
 
-.file-upload-row {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+.file-upload-container {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    gap: 0.5rem 1.5rem;
+    align-items: end;
     width: 100%;
 }
 
+.btn-file-trigger {
+    grid-column: 1;
+    grid-row: 1;
+}
+
 .file-name-display {
+    grid-column: 2;
+    grid-row: 2;
     font-family: var(--font-ui);
     font-size: 0.9rem;
     color: var(--color-text);
@@ -949,12 +984,14 @@ body.invert-mode .ongoing-badge {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    flex: 1;
+    width: 100%;
 }
 
 .image-preview-box {
-    margin-top: 0.5rem;
-    max-width: 300px;
+    grid-column: 2;
+    grid-row: 1;
+    max-width: 200px;
+    width: 100%;
     border: 1px solid rgba(255, 255, 255, 0.15);
     background-color: rgba(255, 255, 255, 0.02);
     padding: 0.5rem;

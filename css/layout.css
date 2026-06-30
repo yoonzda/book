@@ -67,6 +67,12 @@ body > header a.logo img.logo-icon {
     height: 2.0rem;
     width: auto;
     display: block;
+    filter: invert(1) hue-rotate(180deg);
+    transition: filter 0.4s ease;
+}
+
+body.invert-mode > header a.logo img.logo-icon {
+    filter: none;
 }
 
 .logo-text-group {

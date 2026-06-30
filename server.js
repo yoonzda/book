@@ -7,8 +7,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // 미들웨어 설정
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // 파일 도우미 함수들
 const readProjectsData = () => {
@@ -297,7 +297,8 @@ app.post('/api/projects', (req, res) => {
         troubleshooting
     } = req.body;
 
-    if (!title || !description || !imageUrl || !startDate || !dateDisplayMode || !contribution || !role || !techStack || !projectType || !subtitle) {
+    const isDateProvided = (dateDisplayMode === 'single') ? !!endDate : !!startDate;
+    if (!title || !description || !imageUrl || !dateDisplayMode || !isDateProvided || !contribution || !role || !techStack || !projectType || !subtitle) {
         return res.status(400).json({ success: false, message: '필수 필드가 누락되었습니다.' });
     }
 
@@ -356,7 +357,8 @@ app.put('/api/projects/:id', (req, res) => {
         troubleshooting
     } = req.body;
 
-    if (!title || !description || !imageUrl || !startDate || !dateDisplayMode || !contribution || !role || !techStack || !projectType || !subtitle) {
+    const isDateProvided = (dateDisplayMode === 'single') ? !!endDate : !!startDate;
+    if (!title || !description || !imageUrl || !dateDisplayMode || !isDateProvided || !contribution || !role || !techStack || !projectType || !subtitle) {
         return res.status(400).json({ success: false, message: '필수 필드가 누락되었습니다.' });
     }
 

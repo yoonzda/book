@@ -32,7 +32,7 @@
         <nav>
             <ul class="nav-links">
                 <li><a href="#" class="nav-link" id="toggle-invert">INVERT</a></li>
-                <li><a href="/" class="nav-link" id="back-link">GO TO SITE</a></li>
+                <li><a href="/" class="nav-link" id="back-link" target="_blank" rel="noopener noreferrer">GO TO SITE</a></li>
             </ul>
         </nav>
     </header>
@@ -168,15 +168,15 @@
                 <div class="form-group">
                     <label for="imageFile" class="label-brutal">이미지 등록</label>
                     <div class="file-upload-wrapper">
-                        <div class="file-upload-row">
-                            <input type="file" id="imageFile" accept="image/*" class="file-input-hidden" style="display: none;">
+                        <input type="file" id="imageFile" accept="image/*" class="file-input-hidden" style="display: none;">
+                        <div class="file-upload-container">
                             <button type="button" class="btn-brutal btn-file-trigger" onclick="document.getElementById('imageFile').click()">파일 선택</button>
+                            <div class="image-preview-box hidden" id="image-preview-box">
+                                <img src="" id="image-preview" alt="미리보기">
+                            </div>
                             <span class="file-name-display" id="file-name-display">선택된 파일 없음</span>
                         </div>
                         <input type="hidden" id="imageUrl">
-                        <div class="image-preview-box hidden" id="image-preview-box">
-                            <img src="" id="image-preview" alt="미리보기">
-                        </div>
                     </div>
                 </div>
 
