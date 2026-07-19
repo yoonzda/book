@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aether Web Platform - Project</title>
+    <title>Layout Builder - Project</title>
     <link rel="icon" type="image/png" href="../images/logo-icon.png">
     <link rel="stylesheet" href="../style.css">
 </head>
@@ -32,7 +32,6 @@
         <nav>
             <ul class="nav-links">
                 <li><a href="#" class="nav-link" id="toggle-invert">INVERT</a></li>
-                <li><a href="/" class="nav-link" id="back-link">BACK TO LIST</a></li>
             </ul>
         </nav>
     </header>
@@ -44,38 +43,57 @@
                 <!-- 좌측 정보단 -->
                 <div class="project-info-column">
                     <div>
-                        <span class="project-category">NO. 02</span>
-                        <h1 class="project-title project-detail-title">Aether Web Platform</h1>
-                        <p class="project-desc">Next-generation cloud workspace offering automated layout compiling, interactive visual flow charts, and real-time multiplayer editing using WebSockets.</p>
-                        
+                        <a href="/#section-project_1" class="btn-text-back">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.4rem; transition: transform 0.2s ease;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                            <span>BACK TO LIST</span>
+                        </a>
+                        <h1 class="project-title project-detail-title">Layout Builder</h1>
+                        <p class="project-desc">사용자가 웹 레이아웃 설계에 대한 깊은 지식이 없더라도, 브라우저 화면을 직접 보며 직관적으로 그리드 구조를 디자인하고 최적의 CSS/HTML 코드를 즉시 추출할 수 있는 시각적 웹 에디터입니다.</p>
                     </div>
 
                     <!-- 상세 정보 메타 데이터 표 -->
                     <div class="project-meta-grid">
                         <div>
                             <span class="project-meta-label project-meta-sublabel">ROLE</span>
-                            <span class="project-meta-value">Lead Fullstack Developer</span>
+                            <span class="project-meta-value">1인 프로젝트 (기획 · 디자인 · 개발)</span>
                         </div>
                         <div>
                             <span class="project-meta-label project-meta-sublabel">PERIOD</span>
-                            <span class="project-meta-value">2026.01 - 2026.03</span>
+                            <span class="project-meta-value">2026.07 ~</span>
                         </div>
                         
                         
+                        <div>
+                            <span class="project-meta-label project-meta-sublabel">TYPE</span>
+                            <span class="project-meta-value">사내 업무</span>
+                        </div>
 
                         <div class="project-meta-full-row">
                             <span class="project-meta-label project-meta-sublabel">TECH STACK</span>
-                            <span class="project-meta-value">Next.js, Node.js, WebSockets, Redis</span>
+                            <span class="project-meta-value">HTML, CSS (Grid), Vanilla JS, GitHub Pages</span>
                         </div>
-                        <div class="project-link-row">
-                            <span class="project-meta-label project-meta-sublabel">LINKS</span>
-                            <div class="project-links-container">
-                                
-            <a href="https://example.com" target="_blank" class="btn-brutal-icon">
+                    </div>
+
+                    
+                        <div class="project-troubleshooting-section" style="border-top: var(--border-stroke); padding-top: 2rem;">
+                            <span class="project-meta-label project-meta-sublabel">TROUBLESHOOTING & IMPACT</span>
+                            <p class="project-desc" style="white-space: pre-wrap; font-size: 1.05rem; line-height: 1.8; margin-top: 0.5rem; max-width: 100%;">최근 AI 코딩 비서에 의존하여 레이아웃을 생성하는 비전문가 사용자들이 많아졌으나, 복잡한 CSS Grid 규칙(Grid-template, Area 병합 등)을 세부 조정하거나 AI가 생성한 잘못된 코드를 디버깅하는 일은 비전문가에게 매우 높은 장벽이었습니다.
+
+이러한 문제를 해결하기 위해, 직관적인 시각적 조작(셀 추가, 병합, 간격 조정 등)만으로 정교한 그리드 구조를 제작할 수 있는 도구를 개발했습니다. 에디터 내부에서 엄격한 CSS 규격을 상시 검증하므로, 지식이 없어도 규칙이 깨지지 않는 프로덕션 레벨의 깨끗한 CSS/HTML 코드를 즉시 내보낼(Export) 수 있습니다. 이를 통해 비전문가도 AI 코드에만 의존하지 않고 안전하고 완전한 레이아웃 결과물을 직접 통제하고 획득할 수 있는 개발 편의성을 제공합니다.</p>
+                        </div>
+
+                    <div class="project-link-row">
+                        <span class="project-meta-label project-meta-sublabel">LINKS</span>
+                        <div class="project-links-container">
+                            
+            <a href="https://yoonzda.github.io/grid/" target="_blank" class="btn-brutal-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
                 <span>사이트 이동</span>
             </a>
-                            </div>
+                            <a href="/#section-project_1" class="btn-brutal-icon btn-back-brutal">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                                <span>목록으로</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -83,7 +101,7 @@
                 <!-- 우측 이미지단 -->
                 <div class="project-image-column">
                     <div class="project-image-wrapper">
-                        <img src="../images/logo.png" alt="Aether Web Platform" class="project-image-display" loading="lazy">
+                        <img src="../images/logo.png" alt="Layout Builder" class="project-image-display" loading="lazy">
                     </div>
                 </div>
             </div>

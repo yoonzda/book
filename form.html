@@ -321,8 +321,8 @@
             
             const currentYear = new Date().getFullYear();
             
-            // 2015년부터 현재 연도 + 5년까지 생성 (역순)
-            for (let y = currentYear + 5; y >= 2015; y--) {
+            // 2015년부터 현재 연도까지 생성 (역순)
+            for (let y = currentYear; y >= 2015; y--) {
                 const optStart = new Option(`${y}년`, y);
                 const optEnd = new Option(`${y}년`, y);
                 startYearSelect.add(optStart);

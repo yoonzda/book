@@ -32,7 +32,6 @@
         <nav>
             <ul class="nav-links">
                 <li><a href="#" class="nav-link" id="toggle-invert">INVERT</a></li>
-                <li><a href="/" class="nav-link" id="back-link">BACK TO LIST</a></li>
             </ul>
         </nav>
     </header>
@@ -44,10 +43,12 @@
                 <!-- 좌측 정보단 -->
                 <div class="project-info-column">
                     <div>
-                        <span class="project-category">NO. {{PROJECT_NUM}}</span>
+                        <a href="/#section-{{PROJECT_ID}}" class="btn-text-back">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.4rem; transition: transform 0.2s ease;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                            <span>BACK TO LIST</span>
+                        </a>
                         <h1 class="project-title project-detail-title">{{TITLE}}</h1>
                         <p class="project-desc">{{DESCRIPTION}}</p>
-                        {{TROUBLESHOOTING_HTML}}
                     </div>
 
                     <!-- 상세 정보 메타 데이터 표 -->
@@ -67,11 +68,18 @@
                             <span class="project-meta-label project-meta-sublabel">TECH STACK</span>
                             <span class="project-meta-value">{{TECH_STACK}}</span>
                         </div>
-                        <div class="project-link-row">
-                            <span class="project-meta-label project-meta-sublabel">LINKS</span>
-                            <div class="project-links-container">
-                                {{LINKS_HTML}}
-                            </div>
+                    </div>
+
+                    {{TROUBLESHOOTING_HTML}}
+
+                    <div class="project-link-row">
+                        <span class="project-meta-label project-meta-sublabel">LINKS</span>
+                        <div class="project-links-container">
+                            {{LINKS_HTML}}
+                            <a href="/#section-{{PROJECT_ID}}" class="btn-brutal-icon btn-back-brutal">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                                <span>목록으로</span>
+                            </a>
                         </div>
                     </div>
                 </div>

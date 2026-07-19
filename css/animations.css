@@ -1,8 +1,5 @@
 /* 커스텀 마우스 커서 스타일 */
 .custom-cursor {
-    width: 20px;
-    height: 20px;
-    border: 1px solid var(--color-accent);
     position: fixed;
     top: 0;
     left: 0;
@@ -10,24 +7,40 @@
     pointer-events: none;
     z-index: 9999;
     mix-blend-mode: difference;
-    will-change: transform;
-    transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+    will-change: transform, width, height;
+    transition: background-color 0.3s ease, opacity 0.2s ease, border-color 0.3s ease;
+    box-sizing: border-box;
+    border: 1px solid var(--color-accent);
+    background-color: transparent;
+    overflow: hidden;
+}
+
+/* 라이트 모드(Invert)에서 커스텀 커서 가시성 확보 */
+body.invert-mode .custom-cursor:not(.hovered):not(.preview-active) {
+    mix-blend-mode: normal;
+    border-color: var(--color-text);
 }
 
 /* 커서 호버 상태 */
-.custom-cursor.hovered {
-    width: 50px;
-    height: 50px;
+.custom-cursor.hovered:not(.preview-active) {
     background-color: var(--color-accent);
     border-color: var(--color-accent);
     mix-blend-mode: normal;
     opacity: 0.15;
 }
 
-/* 터치 디바이스 커서 예외 처리 (마우스 없는 기기 비활성화) */
+/* 이미지 프리뷰 활성화 상태 (커서가 이미지 액자로 변신) */
+.custom-cursor.preview-active {
+    mix-blend-mode: normal !important;
+    background-color: var(--color-bg) !important;
+    border-color: var(--color-text) !important;
+    opacity: 1 !important;
+}
+
+/* 터치 디바이스 예외 처리 (마우스 없는 기기 비활성화) */
 @media (hover: none) or (pointer: coarse) {
     .custom-cursor {
-        display: none;
+        display: none !important;
     }
 }
 
@@ -61,35 +74,23 @@
     opacity: 0.04;
 }
 
-/* 이미지 호버 리빌 애니메이션 */
-.hover-reveal-image {
-    position: fixed;
-    width: 300px;
-    height: 200px;
-    pointer-events: none;
-    z-index: 50;
-    overflow: hidden;
-    opacity: 0;
-    transform: translate3d(0, 0, 0) scale(0.8);
-    will-change: transform, opacity;
-    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.hover-reveal-image.active {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
-}
-
-.hover-reveal-image img {
+/* 이미지 프리뷰 래퍼 및 이미지 */
+.cursor-preview-wrapper {
     width: 100%;
     height: 100%;
+    opacity: 0;
+    overflow: hidden;
+    transition: opacity 0.25s ease;
+}
+
+.custom-cursor.preview-active .cursor-preview-wrapper {
+    opacity: 1;
+}
+
+.custom-cursor img {
+    width: 320px; /* 고정 크기로 줌인/줌아웃 방지, 크롭 리빌 효과 */
+    height: 200px;
     object-fit: cover;
+    object-position: top;
+    display: block;
 }
-
-/* 라이트 모드(Invert)에서 커스텀 커서 가독성 개선 */
-body.invert-mode .custom-cursor:not(.hovered) {
-    mix-blend-mode: normal;
-    border-color: var(--color-text); /* 검은색 테두리로 노출하여 가시성 확보 */
-}
-
-

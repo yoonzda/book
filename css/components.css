@@ -4,8 +4,9 @@
     font-size: clamp(2.5rem, 6.5vw, 6rem);
     font-weight: 500;
     line-height: 1.05;
-    text-transform: uppercase;
     color: var(--color-text);
+    word-break: keep-all;
+    overflow-wrap: break-word;
 }
 
 .project-title a,
@@ -38,6 +39,8 @@
     color: var(--color-text);
     opacity: 0.8;
     max-width: 600px;
+    word-break: keep-all;
+    overflow-wrap: break-word;
 }
 
 /* 브루탈리스트 네비게이션 */
@@ -1038,7 +1041,7 @@ body.invert-mode .image-preview-box {
 
 .btn-brutal-icon:hover {
     background-color: var(--color-accent);
-    color: #0A0A0A;
+    color: var(--color-bg);
     border-color: var(--color-accent);
 }
 
@@ -1049,3 +1052,30 @@ body.invert-mode .image-preview-box {
     stroke-width: 2;
     fill: none;
 }
+
+/* 상세페이지 상단 목록으로 가기 심플 텍스트 링크 */
+.btn-text-back {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--color-text);
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    opacity: 0.5;
+    transition: opacity 0.2s ease, color 0.2s ease;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+}
+
+.btn-text-back:hover {
+    opacity: 1;
+    color: var(--color-accent);
+}
+
+.btn-text-back:hover svg {
+    transform: translateX(-4px);
+}
+
+

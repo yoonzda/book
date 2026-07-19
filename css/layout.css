@@ -148,7 +148,8 @@ main.main-content {
 
 /* 프로젝트 상세 페이지 전용 레이아웃 */
 .project-detail-main {
-    padding-bottom: 8rem;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .project-detail-section {
@@ -157,7 +158,8 @@ main.main-content {
     scroll-snap-align: none;
     border-bottom: none;
     display: block;
-    padding-top: 8rem;
+    padding: 8rem 4rem 6rem 4rem;
+    overflow: visible;
 }
 
 .project-info-column {
@@ -202,10 +204,15 @@ main.main-content {
     display: flex;
     align-items: flex-start;
     justify-content: center;
+    position: sticky;
+    top: 8rem;
+    align-self: start;
 }
 
 .project-image-wrapper {
     width: 100%;
+    height: calc(100vh - 14rem);
+    min-height: 480px;
     border: var(--border-stroke);
     background-color: var(--color-border);
     overflow: hidden;
@@ -213,9 +220,10 @@ main.main-content {
 
 .project-image-display {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
     object-fit: cover;
+    object-position: top;
 }
 
 /* 프로젝트 카드 인덱스 페이지 레이아웃 */
@@ -256,6 +264,13 @@ main.main-content {
 @media (max-width: 768px) {
     .project-info-column, .project-image-column {
         grid-column: span 12;
+    }
+    .project-image-column {
+        position: static;
+    }
+    .project-image-wrapper {
+        height: 50vh;
+        min-height: 300px;
     }
     .project-meta-grid {
         grid-template-columns: 1fr;

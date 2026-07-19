@@ -74,26 +74,26 @@ const saveBase64Image = (base64Str) => {
     if (!base64Str.startsWith('data:image')) {
         return base64Str;
     }
-    
+
     try {
         const matches = base64Str.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
         if (!matches || matches.length !== 3) {
             throw new Error('올바르지 않은 base64 형식입니다.');
         }
-        
+
         const ext = matches[1].split('/')[1] || 'png';
         const buffer = Buffer.from(matches[2], 'base64');
-        
+
         // uploads 폴더 보장
         const uploadsDir = path.join(__dirname, 'images', 'uploads');
         if (!fs.existsSync(uploadsDir)) {
             fs.mkdirSync(uploadsDir, { recursive: true });
         }
-        
+
         const fileName = `upload_${Date.now()}.${ext}`;
         const filePath = path.join(uploadsDir, fileName);
         fs.writeFileSync(filePath, buffer);
-        
+
         return `images/uploads/${fileName}`;
     } catch (err) {
         console.error('Base64 이미지 저장 에러:', err);
@@ -203,7 +203,7 @@ const compileStaticPages = () => {
     projects.forEach((proj, idx) => {
         const num = String(idx + 1).padStart(2, '0');
         const formattedDate = formatProjectDate(proj);
-        
+
         // 1. 프로젝트 분류 (Type) 렌더링
         const projectTypeHtml = proj.projectType ? `
                         <div>
@@ -224,27 +224,27 @@ const compileStaticPages = () => {
             linksHtml += `
             <a href="${proj.githubLink}" target="_blank" class="btn-brutal-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-                <span>GITHUB 보기</span>
+                <span>GITHUB</span>
             </a>`;
         }
         if (proj.figmaLink) {
             linksHtml += `
             <a href="${proj.figmaLink}" target="_blank" class="btn-brutal-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z"></path><path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z"></path><path d="M12 9h3.5a3.5 3.5 0 1 1-3.5 3.5V9z"></path><path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z"></path><path d="M5 18.5A3.5 3.5 0 0 1 8.5 15H12v3.5a3.5 3.5 0 1 1-7 0z"></path></svg>
-                <span>FIGMA 보기</span>
+                <span>FIGMA</span>
             </a>`;
         }
         if (proj.notionLink) {
             linksHtml += `
             <a href="${proj.notionLink}" target="_blank" class="btn-brutal-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><path d="M7 7h3l5 10V7h2M7 17v-3m10 3v-3"></path></svg>
-                <span>NOTION 보기</span>
+                <span>NOTION</span>
             </a>`;
         }
 
         // 3. 문제 해결 및 성과 (Troubleshooting) 렌더링
         const troubleshootingHtml = proj.troubleshooting ? `
-                        <div class="project-troubleshooting-section" style="margin-top: 3rem; border-top: var(--border-stroke); padding-top: 2rem;">
+                        <div class="project-troubleshooting-section" style="border-top: var(--border-stroke); padding-top: 2rem;">
                             <span class="project-meta-label project-meta-sublabel">TROUBLESHOOTING & IMPACT</span>
                             <p class="project-desc" style="white-space: pre-wrap; font-size: 1.05rem; line-height: 1.8; margin-top: 0.5rem; max-width: 100%;">${proj.troubleshooting}</p>
                         </div>` : '';
@@ -260,8 +260,9 @@ const compileStaticPages = () => {
             .replace(/{{ROLE}}/g, proj.role || 'Personal')
             .replace(/{{TECH_STACK}}/g, proj.techStack || 'None')
             .replace(/{{LINKS_HTML}}/g, linksHtml)
-            .replace(/{{TROUBLESHOOTING_HTML}}/g, troubleshootingHtml);
-        
+            .replace(/{{TROUBLESHOOTING_HTML}}/g, troubleshootingHtml)
+            .replace(/{{PROJECT_ID}}/g, proj.id);
+
         fs.writeFileSync(path.join(projectsDir, `${proj.id}.html`), html, 'utf8');
     });
     console.log(`개별 프로젝트 상세 페이지 컴파일 완료 (${projects.length}개)`);
@@ -277,17 +278,17 @@ app.get('/api/projects', (req, res) => {
 
 // 2. 프로젝트 추가
 app.post('/api/projects', (req, res) => {
-    const { 
-        title, 
-        category, 
-        description, 
-        imageUrl, 
-        startDate, 
-        endDate, 
-        dateDisplayMode, 
-        contribution, 
-        role, 
-        techStack, 
+    const {
+        title,
+        category,
+        description,
+        imageUrl,
+        startDate,
+        endDate,
+        dateDisplayMode,
+        contribution,
+        role,
+        techStack,
         link,
         projectType,
         githubLink,
@@ -337,17 +338,17 @@ app.post('/api/projects', (req, res) => {
 // 3. 프로젝트 수정
 app.put('/api/projects/:id', (req, res) => {
     const { id } = req.params;
-    const { 
-        title, 
-        category, 
-        description, 
-        imageUrl, 
-        startDate, 
-        endDate, 
-        dateDisplayMode, 
-        contribution, 
-        role, 
-        techStack, 
+    const {
+        title,
+        category,
+        description,
+        imageUrl,
+        startDate,
+        endDate,
+        dateDisplayMode,
+        contribution,
+        role,
+        techStack,
         link,
         projectType,
         githubLink,
@@ -460,7 +461,7 @@ const initServer = () => {
     if (!fs.existsSync(templatesDir)) {
         fs.mkdirSync(templatesDir);
     }
-    
+
     // 만약 초기 구동 시 템플릿 파일이 있다면 컴파일
     if (fs.existsSync(path.join(templatesDir, 'index.template.html'))) {
         compileStaticPages();

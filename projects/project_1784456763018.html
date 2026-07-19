@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>충남노인일자리 뉴스레터 - Project</title>
+    <link rel="icon" type="image/png" href="../images/logo-icon.png">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <!-- 초기 테마 반전(Invert) 설정: 첫 렌더링 전 깜빡임 차단 -->
+    <script>
+        if (localStorage.getItem('theme-invert') === 'true') {
+            document.body.classList.add('invert-mode');
+        }
+    </script>
+    <!-- 커스텀 커서 -->
+    <div class="custom-cursor"></div>
+
+    <!-- 노이즈 캔버스 배경 -->
+    <canvas id="noise-canvas"></canvas>
+
+    <!-- 상단 내비게이션 바 -->
+    <header>
+        <a href="/" class="logo" id="home-link">
+            <img src="../images/logo-icon.png" alt="YOONZDA" class="logo-icon">
+            <div class="logo-text-group">
+                <span class="logo-title">yoonzda<span class="logo-dot">.</span></span>
+                <span class="logo-subtitle">Creative Web Developer</span>
+            </div>
+        </a>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#" class="nav-link" id="toggle-invert">INVERT</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- 프로젝트 상세 내용 레이아웃 -->
+    <main class="main-content project-detail-main">
+        <article class="project-section in-view project-detail-section">
+            <div class="grid-container">
+                <!-- 좌측 정보단 -->
+                <div class="project-info-column">
+                    <div>
+                        <a href="/#section-project_1784456763018" class="btn-text-back">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.4rem; transition: transform 0.2s ease;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                            <span>BACK TO LIST</span>
+                        </a>
+                        <h1 class="project-title project-detail-title">충남노인일자리 뉴스레터</h1>
+                        <p class="project-desc">파이썬 원고 파싱을 통한 뉴스레터 게시글 자동 업로드 기능 구현</p>
+                    </div>
+
+                    <!-- 상세 정보 메타 데이터 표 -->
+                    <div class="project-meta-grid">
+                        <div>
+                            <span class="project-meta-label project-meta-sublabel">ROLE</span>
+                            <span class="project-meta-value">기획 및 개발</span>
+                        </div>
+                        <div>
+                            <span class="project-meta-label project-meta-sublabel">PERIOD</span>
+                            <span class="project-meta-value">2026.06</span>
+                        </div>
+                        
+                        
+                        <div>
+                            <span class="project-meta-label project-meta-sublabel">TYPE</span>
+                            <span class="project-meta-value">사내 업무</span>
+                        </div>
+
+                        <div class="project-meta-full-row">
+                            <span class="project-meta-label project-meta-sublabel">TECH STACK</span>
+                            <span class="project-meta-value">파이썬</span>
+                        </div>
+                    </div>
+
+                    
+
+                    <div class="project-link-row">
+                        <span class="project-meta-label project-meta-sublabel">LINKS</span>
+                        <div class="project-links-container">
+                            
+            <a href="https://cnsj23.com/" target="_blank" class="btn-brutal-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+                <span>사이트 이동</span>
+            </a>
+                            <a href="/#section-project_1784456763018" class="btn-brutal-icon btn-back-brutal">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                                <span>목록으로</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 우측 이미지단 -->
+                <div class="project-image-column">
+                    <div class="project-image-wrapper">
+                        <img src="../images/uploads/upload_1784456763013.png" alt="충남노인일자리 뉴스레터" class="project-image-display" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <!-- 인터랙션 스크립트 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. 커스텀 마우스 커서 (Lerp + requestAnimationFrame)
+            const cursor = document.querySelector('.custom-cursor');
+            let mouseX = 0, mouseY = 0;
+            let cursorX = 0, cursorY = 0;
+            const lerpFactor = 0.1;
+
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            function animateCursor() {
+                cursorX += (mouseX - cursorX) * lerpFactor;
+                cursorY += (mouseY - cursorY) * lerpFactor;
+                cursor.style.transform = `translate3d(${cursorX - 10}px, ${cursorY - 10}px, 0)`;
+                requestAnimationFrame(animateCursor);
+            }
+            requestAnimationFrame(animateCursor);
+
+            // 링크/버튼 호버 효과
+            const interactiveElements = document.querySelectorAll('a, button');
+            interactiveElements.forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+
+            // 2. 필름 노이즈(Film Grain) 효과
+            const canvas = document.getElementById('noise-canvas');
+            const ctx = canvas.getContext('2d');
+            let w = canvas.width = window.innerWidth;
+            let h = canvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            });
+
+            function renderNoise() {
+                ctx.clearRect(0, 0, w, h);
+                const idata = ctx.createImageData(w, h);
+                const buffer32 = new Uint32Array(idata.data.buffer);
+                const len = buffer32.length;
+                
+                for (let i = 0; i < len; i += 13) {
+                    if (Math.random() < 0.05) {
+                        buffer32[i] = 0x15ffffff;
+                    }
+                }
+                ctx.putImageData(idata, 0, 0);
+                setTimeout(() => {
+                    requestAnimationFrame(renderNoise);
+                }, 50);
+            }
+            requestAnimationFrame(renderNoise);
+
+            // 3. 테마 반전(Invert) 토글 기능
+            const btnInvert = document.getElementById('toggle-invert');
+
+
+
+            btnInvert.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.body.classList.toggle('invert-mode');
+                localStorage.setItem('theme-invert', document.body.classList.contains('invert-mode'));
+            });
+
+        });
+    </script>
+</body>
+</html>
