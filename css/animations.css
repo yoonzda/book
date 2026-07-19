@@ -1,5 +1,7 @@
 /* 커스텀 마우스 커서 스타일 */
 .custom-cursor {
+    width: 20px;
+    height: 20px;
     position: fixed;
     top: 0;
     left: 0;
