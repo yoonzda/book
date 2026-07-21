@@ -34,6 +34,11 @@
     /* 기하학적 요소 및 테두리 (border-radius: 0 강제) */
     --border-stroke: 1px solid var(--color-border);
     --border-stroke-accent: 1px solid var(--color-accent);
+
+    /* 공통 레이아웃 규격 토큰 (기본 데스크톱 기준) */
+    --header-height: 4.5rem;
+    --section-padding-x: 4rem;
+    --section-padding-y: 5rem;
 }
 
 /* 고대비 색상 반전(Invert) 테마 정의 */

@@ -168,14 +168,11 @@
                 <div class="form-group">
                     <label for="imageFile" class="label-brutal">이미지 등록</label>
                     <div class="file-upload-wrapper">
-                        <input type="file" id="imageFile" accept="image/*" class="file-input-hidden" style="display: none;">
+                        <input type="file" id="imageFile" accept="image/*" class="file-input-hidden" style="display: none;" multiple>
                         <div class="file-upload-container">
-                            <button type="button" class="btn-brutal btn-file-trigger" onclick="document.getElementById('imageFile').click()">파일 선택</button>
-                            <div class="image-preview-box hidden" id="image-preview-box">
-                                <img src="" id="image-preview" alt="미리보기">
-                            </div>
-                            <span class="file-name-display" id="file-name-display">선택된 파일 없음</span>
+                            <button type="button" class="btn-brutal btn-file-trigger" onclick="document.getElementById('imageFile').click()">+ 이미지 추가</button>
                         </div>
+                        <div class="images-preview-list-container" id="images-preview-list"></div>
                         <input type="hidden" id="imageUrl">
                     </div>
                 </div>
@@ -294,31 +291,93 @@
                 localStorage.setItem('theme-invert', document.body.classList.contains('invert-mode'));
             });
             // -----------------------------------------
-            // 3-2. 이미지 파일 업로드 & 미리보기 로직
+            // 3-2. 다중 이미지 파일 업로드 & 미리보기 관리 로직
             // -----------------------------------------
             const imageFile = document.getElementById('imageFile');
-            const fileNameDisplay = document.getElementById('file-name-display');
             const imageUrlInput = document.getElementById('imageUrl');
-            const imagePreviewBox = document.getElementById('image-preview-box');
-            const imagePreview = document.getElementById('image-preview');
+            const imagesPreviewList = document.getElementById('images-preview-list');
 
-            imageFile.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    fileNameDisplay.innerText = file.name;
-                    const reader = new FileReader();
-                    reader.onload = (event) => {
-                        imageUrlInput.value = event.target.result; // Base64 data URL
-                        imagePreview.src = event.target.result;
-                        imagePreviewBox.classList.remove('hidden');
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    fileNameDisplay.innerText = '선택된 파일 없음';
+            window.projectImagesList = []; // Array of { url: string, isRepresentative: boolean }
+
+            window.renderImagesPreviewList = function() {
+                imagesPreviewList.innerHTML = '';
+                
+                if (window.projectImagesList.length === 0) {
                     imageUrlInput.value = '';
-                    imagePreview.src = '';
-                    imagePreviewBox.classList.add('hidden');
+                    return;
                 }
+
+                // 대표 이미지가 설정되어 있지 않다면 첫 번째 이미지를 대표 이미지로 설정
+                if (!window.projectImagesList.some(item => item.isRepresentative)) {
+                    window.projectImagesList[0].isRepresentative = true;
+                }
+
+                const repItem = window.projectImagesList.find(item => item.isRepresentative) || window.projectImagesList[0];
+                imageUrlInput.value = repItem.url;
+
+                window.projectImagesList.forEach((item, index) => {
+                    const card = document.createElement('div');
+                    card.className = `image-preview-card ${item.isRepresentative ? 'is-rep' : ''}`;
+                    
+                    const starSvg = item.isRepresentative 
+                        ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`
+                        : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+
+                    const closeSvg = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+
+                    card.innerHTML = `
+                        <div class="image-preview-thumb-box">
+                            <img src="${item.url}" alt="미리보기 ${index + 1}">
+                            ${item.isRepresentative ? `<span class="rep-label-tag">대표 이미지</span>` : ''}
+                        </div>
+                        <div class="image-card-top-badges">
+                            <button type="button" class="circle-btn btn-rep-circle ${item.isRepresentative ? 'active' : ''}" onclick="setRepresentativeImage(${index})" title="${item.isRepresentative ? '대표 이미지' : '대표 이미지로 설정'}">
+                                ${starSvg}
+                            </button>
+                            <button type="button" class="circle-btn btn-delete-circle" onclick="removeImageItem(${index})" title="삭제">
+                                ${closeSvg}
+                            </button>
+                        </div>
+                    `;
+                    imagesPreviewList.appendChild(card);
+                });
+                bindHoverEffects();
+            };
+
+            window.setRepresentativeImage = function(index) {
+                window.projectImagesList.forEach((item, i) => {
+                    item.isRepresentative = (i === index);
+                });
+                window.renderImagesPreviewList();
+            };
+
+            window.removeImageItem = function(index) {
+                window.projectImagesList.splice(index, 1);
+                window.renderImagesPreviewList();
+            };
+
+            imageFile.addEventListener('change', async (e) => {
+                const files = Array.from(e.target.files);
+                if (files.length === 0) return;
+
+                const readPromises = files.map(file => {
+                    return new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = (event) => resolve(event.target.result);
+                        reader.readAsDataURL(file);
+                    });
+                });
+
+                const newBase64Urls = await Promise.all(readPromises);
+                newBase64Urls.forEach(url => {
+                    window.projectImagesList.push({
+                        url: url,
+                        isRepresentative: false
+                    });
+                });
+
+                window.renderImagesPreviewList();
+                imageFile.value = '';
             });
 
             // -----------------------------------------
@@ -433,12 +492,20 @@
                     if (proj) {
                         document.getElementById('title').value = proj.title || '';
                         
-                        if (proj.imageUrl) {
-                            document.getElementById('imageUrl').value = proj.imageUrl;
-                            document.getElementById('image-preview').src = proj.imageUrl;
-                            document.getElementById('image-preview-box').classList.remove('hidden');
-                            document.getElementById('file-name-display').innerText = '기존 이미지';
+                        if (Array.isArray(proj.images) && proj.images.length > 0) {
+                            window.projectImagesList = proj.images.map(img => ({
+                                url: img,
+                                isRepresentative: (img === proj.imageUrl)
+                            }));
+                            if (!window.projectImagesList.some(item => item.isRepresentative)) {
+                                window.projectImagesList[0].isRepresentative = true;
+                            }
+                        } else if (proj.imageUrl) {
+                            window.projectImagesList = [{ url: proj.imageUrl, isRepresentative: true }];
+                        } else {
+                            window.projectImagesList = [];
                         }
+                        window.renderImagesPreviewList();
 
                         document.getElementById('projectType').value = proj.projectType || '';
                         document.getElementById('githubLink').value = proj.githubLink || '';
@@ -494,14 +561,17 @@
                 const id = document.getElementById('projectId').value;
                 const title = document.getElementById('title').value;
                 const category = '';
-                const imageUrl = document.getElementById('imageUrl').value;
                 const dateDisplayMode = document.querySelector('input[name="dateDisplayMode"]:checked').value;
 
-                if (!imageUrl) {
-                    alert('이미지를 등록해 주세요.');
+                if (!window.projectImagesList || window.projectImagesList.length === 0) {
+                    alert('최소 1개 이상의 이미지를 등록해 주세요.');
                     document.getElementById('imageFile').click();
                     return;
                 }
+
+                const repItem = window.projectImagesList.find(img => img.isRepresentative) || window.projectImagesList[0];
+                const imageUrl = repItem.url;
+                const images = window.projectImagesList.map(item => item.url);
 
                 const sYear = document.getElementById('startYear').value;
                 const sMonth = document.getElementById('startMonth').value;
@@ -568,6 +638,7 @@
                     title, 
                     category, 
                     imageUrl, 
+                    images,
                     startDate, 
                     endDate, 
                     dateDisplayMode, 

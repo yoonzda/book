@@ -35,25 +35,24 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 5rem 4rem; /* 상하 여백 5rem 통일 */
+    padding-top: calc(var(--header-height) + var(--section-padding-y));
+    padding-bottom: var(--section-padding-y);
+    padding-left: var(--section-padding-x);
+    padding-right: var(--section-padding-x);
     border-bottom: var(--border-stroke);
     position: relative;
     overflow: hidden;
 }
 
-/* 첫 번째 섹션은 상단 고정 헤더 높이 반영 */
-.project-section:first-of-type {
-    padding-top: calc(5rem + 4.5rem);
-}
-
 /* 헤더 및 레이아웃 구조 */
 body > header {
     width: 100%;
+    height: var(--header-height);
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: var(--border-stroke);
-    padding: 1.5rem 4rem;
+    padding: 0 var(--section-padding-x);
     background-color: var(--color-bg);
     position: fixed;
     top: 0;
@@ -128,15 +127,16 @@ main.main-content {
 
 /* 반응형 미디어 쿼리 (768px 이하 모바일 디바이스) */
 @media (max-width: 768px) {
+    :root {
+        --header-height: 3.8rem;
+        --section-padding-x: 1.25rem;
+        --section-padding-y: 2.5rem;
+    }
+
     .project-section {
-        padding: 4.5rem 1.25rem; /* 모바일 상하 여백 4.5rem 통일 */
         height: auto;
         min-height: auto; /* 텅 비어 보이는 100dvh 강제 제거 */
         scroll-snap-align: none;
-    }
-
-    .project-section:first-of-type {
-        padding-top: calc(4.5rem + 3.8rem); /* 모바일 헤더 높이 반영 */
     }
     
     .scroll-container {
@@ -146,7 +146,7 @@ main.main-content {
     }
     
     body > header {
-        padding: 0.85rem 1.25rem;
+        padding: 0 var(--section-padding-x);
     }
     
     .logo-title {
@@ -174,20 +174,22 @@ main.main-content {
 
 /* 중간 해상도 (태블릿 및 소형 노트북 769px ~ 1200px) */
 @media (min-width: 769px) and (max-width: 1200px) {
-    .project-section {
-        padding: 6.5rem 2.5rem 3.5rem 2.5rem;
+    :root {
+        --header-height: 4.5rem;
+        --section-padding-x: 2.5rem;
+        --section-padding-y: 3rem;
     }
 
     .project-detail-section {
-        padding: 6rem 2.5rem 4rem 2.5rem;
+        padding: calc(var(--header-height) + 2rem) var(--section-padding-x) 4rem var(--section-padding-x);
     }
     
     body > header {
-        padding: 1.2rem 2.5rem;
+        padding: 0 var(--section-padding-x);
     }
     
     .admin-panel-container {
-        padding: 4rem 2.5rem 8rem 2.5rem;
+        padding: calc(var(--header-height) + 2rem) var(--section-padding-x) 8rem var(--section-padding-x);
     }
 }
 
@@ -289,7 +291,7 @@ main.main-content {
 }
 
 .project-card-body {
-    margin: auto 0;
+    margin: 2.5rem 0 auto 0;
     padding: 0;
     display: flex;
     flex-direction: column;

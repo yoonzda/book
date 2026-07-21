@@ -256,12 +256,20 @@ const compileStaticPages = () => {
                             <p class="project-desc project-troubleshooting-desc">${formatHighlightText(proj.troubleshooting)}</p>
                         </div>` : '';
 
+        const formatImgUrl = (url) => (!url ? '' : (url.startsWith('http') || url.startsWith('/')) ? url : `../${url}`);
+        const projImages = (Array.isArray(proj.images) && proj.images.length > 0)
+            ? proj.images
+            : [proj.imageUrl];
+        const formattedImages = projImages.map(formatImgUrl);
+        const repImageFormatted = formatImgUrl(proj.imageUrl || projImages[0]);
+
         let html = projectTemplate
             .replace(/{{TITLE}}/g, proj.title)
             .replace(/{{PROJECT_NUM}}/g, num)
             .replace(/{{PROJECT_TYPE_HTML}}/g, projectTypeHtml)
             .replace(/{{DESCRIPTION}}/g, formatHighlightText(proj.description || ''))
-            .replace(/{{IMAGE}}/g, proj.imageUrl.startsWith('http') || proj.imageUrl.startsWith('/') ? proj.imageUrl : `../${proj.imageUrl}`)
+            .replace(/{{IMAGE}}/g, repImageFormatted)
+            .replace(/{{IMAGES_JSON}}/g, JSON.stringify(formattedImages))
             .replace(/{{PERIOD}}/g, formattedDate)
             .replace(/{{CONTRIBUTION}}/g, proj.contribution || '100%')
             .replace(/{{ROLE}}/g, proj.role || 'Personal')
@@ -290,6 +298,7 @@ app.post('/api/projects', (req, res) => {
         category,
         description,
         imageUrl,
+        images,
         startDate,
         endDate,
         dateDisplayMode,
@@ -306,18 +315,23 @@ app.post('/api/projects', (req, res) => {
     } = req.body;
 
     const isDateProvided = (dateDisplayMode === 'single') ? !!endDate : !!startDate;
-    if (!title || !description || !imageUrl || !dateDisplayMode || !isDateProvided || !contribution || !role || !techStack || !projectType || !subtitle) {
+    const hasImage = (Array.isArray(images) && images.length > 0) || !!imageUrl;
+    if (!title || !description || !hasImage || !dateDisplayMode || !isDateProvided || !contribution || !role || !techStack || !projectType || !subtitle) {
         return res.status(400).json({ success: false, message: '필수 필드가 누락되었습니다.' });
     }
 
     const projects = readProjectsData();
-    const savedImageUrl = saveBase64Image(imageUrl);
+    const rawImages = (Array.isArray(images) && images.length > 0) ? images : [imageUrl];
+    const savedImages = rawImages.map(img => saveBase64Image(img)).filter(Boolean);
+    const savedImageUrl = imageUrl ? saveBase64Image(imageUrl) : (savedImages[0] || '');
+
     const newProject = {
         id: `project_${Date.now()}`,
         title,
         category: category || '',
         description,
         imageUrl: savedImageUrl,
+        images: savedImages,
         startDate,
         endDate: endDate || '',
         dateDisplayMode,
@@ -350,6 +364,7 @@ app.put('/api/projects/:id', (req, res) => {
         category,
         description,
         imageUrl,
+        images,
         startDate,
         endDate,
         dateDisplayMode,
@@ -366,7 +381,8 @@ app.put('/api/projects/:id', (req, res) => {
     } = req.body;
 
     const isDateProvided = (dateDisplayMode === 'single') ? !!endDate : !!startDate;
-    if (!title || !description || !imageUrl || !dateDisplayMode || !isDateProvided || !contribution || !role || !techStack || !projectType || !subtitle) {
+    const hasImage = (Array.isArray(images) && images.length > 0) || !!imageUrl;
+    if (!title || !description || !hasImage || !dateDisplayMode || !isDateProvided || !contribution || !role || !techStack || !projectType || !subtitle) {
         return res.status(400).json({ success: false, message: '필수 필드가 누락되었습니다.' });
     }
 
@@ -377,13 +393,17 @@ app.put('/api/projects/:id', (req, res) => {
         return res.status(404).json({ success: false, message: '해당 프로젝트를 찾을 수 없습니다.' });
     }
 
-    const savedImageUrl = saveBase64Image(imageUrl);
+    const rawImages = (Array.isArray(images) && images.length > 0) ? images : [imageUrl];
+    const savedImages = rawImages.map(img => saveBase64Image(img)).filter(Boolean);
+    const savedImageUrl = imageUrl ? saveBase64Image(imageUrl) : (savedImages[0] || '');
+
     projects[index] = {
         ...projects[index],
         title,
         category: category || '',
         description,
         imageUrl: savedImageUrl,
+        images: savedImages,
         startDate,
         endDate: endDate || '',
         dateDisplayMode,

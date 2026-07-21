@@ -44,20 +44,24 @@
     "title": "KCAB International",
     "category": "",
     "description": "디자이너, 개발자와 함께 진행한 퍼블리싱 외주 작업",
-    "imageUrl": "images/logo.png",
+    "imageUrl": "images/uploads/upload_1784649845626.png",
     "startDate": "2025.12",
     "endDate": "2026.03",
     "dateDisplayMode": "period",
-    "contribution": "30%",
+    "contribution": "20%",
     "role": "Publishing",
     "techStack": "html, css, js",
-    "link": "https://yoonzda.github.io/kcab/",
+    "link": "https://www.kcabinternational.or.kr/",
     "projectType": "외주",
     "githubLink": "",
-    "figmaLink": "",
+    "figmaLink": "https://www.figma.com/design/Pd018yqMNIYA9gjC5YRvzy/yoonz?node-id=63618-6626&t=555R0WLLbwu9fqSy-11",
     "notionLink": "",
-    "subtitle": "KCAB Internation 홈페이지 리뉴얼",
-    "troubleshooting": "주말과 평일 퇴근 후 시간을 활용하여 진행한 외주 작업"
+    "subtitle": "KCAB International 홈페이지 리뉴얼",
+    "troubleshooting": "피그마로 디자인을 전달받고\n개발이 필요한 페이지를 우선 작업하여 깃헙을 통해 전달하고\n영문 작업 내용을 토대로 국문 작업을 진행 총 3개월에 걸쳐 퍼블리싱 작업을 진행했습니다. ",
+    "images": [
+      "images/uploads/upload_1784649845626.png",
+      "images/uploads/upload_1784650714776.png"
+    ]
   },
   {
     "id": "project_1782317016195",

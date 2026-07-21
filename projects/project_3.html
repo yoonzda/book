@@ -55,6 +55,11 @@
 
                     <!-- 상세 정보 메타 데이터 표 -->
                     <div class="project-meta-grid">
+                        
+                        <div>
+                            <span class="project-meta-label project-meta-sublabel">TYPE</span>
+                            <span class="project-meta-value">개인 프로젝트</span>
+                        </div>
                         <div>
                             <span class="project-meta-label project-meta-sublabel">ROLE</span>
                             <span class="project-meta-value">1인 프로젝트 (기획 · 디자인 · 개발)</span>
@@ -62,12 +67,6 @@
                         <div>
                             <span class="project-meta-label project-meta-sublabel">PERIOD</span>
                             <span class="project-meta-value">2026.04</span>
-                        </div>
-                        
-                        
-                        <div>
-                            <span class="project-meta-label project-meta-sublabel">TYPE</span>
-                            <span class="project-meta-value">개인 프로젝트</span>
                         </div>
 
                         <div class="project-meta-full-row">
@@ -121,12 +120,43 @@
                 <!-- 우측 이미지단 -->
                 <div class="project-image-column">
                     <div class="project-image-wrapper">
-                        <img src="../images/uploads/upload_1782841090402.png" alt="윤지서점" class="project-image-display" loading="lazy">
+                        <img src="../images/uploads/upload_1782841090402.png" alt="윤지서점" class="project-image-display" loading="lazy" data-lightbox-index="0">
                     </div>
                 </div>
             </div>
         </article>
     </main>
+
+    <!-- 전체 화면 스크롤/확대 지원 모달 라이트박스 -->
+    <div id="image-lightbox-modal" class="lightbox-modal hidden" aria-hidden="true" role="dialog">
+        <div class="lightbox-header">
+            <div class="lightbox-title-group">
+                <span class="lightbox-project-title">윤지서점</span>
+                <span class="lightbox-counter" id="lightbox-counter">1 / 1</span>
+            </div>
+            <div class="lightbox-toolbar">
+                <button type="button" class="lightbox-btn" id="lightbox-zoom-out" title="축소 (-)">-</button>
+                <span class="lightbox-zoom-level" id="lightbox-zoom-val">100%</span>
+                <button type="button" class="lightbox-btn" id="lightbox-zoom-in" title="확대 (+)">+</button>
+                <button type="button" class="lightbox-btn" id="lightbox-zoom-reset" title="원래 크기">RESET</button>
+                <button type="button" class="lightbox-btn btn-lightbox-close" id="lightbox-close" aria-label="닫기">✕</button>
+            </div>
+        </div>
+        
+        <div class="lightbox-content-area" id="lightbox-scroll-container">
+            <button type="button" class="lightbox-nav-btn lightbox-prev" id="lightbox-prev" aria-label="이전 이미지">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            
+            <div class="lightbox-img-wrapper" id="lightbox-img-wrapper">
+                <img src="" alt="확대 이미지" id="lightbox-image" class="lightbox-image">
+            </div>
+            
+            <button type="button" class="lightbox-nav-btn lightbox-next" id="lightbox-next" aria-label="다음 이미지">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+        </div>
+    </div>
 
     <!-- 인터랙션 스크립트 -->
     <script>
@@ -189,12 +219,155 @@
             // 3. 테마 반전(Invert) 토글 기능
             const btnInvert = document.getElementById('toggle-invert');
 
-
-
             btnInvert.addEventListener('click', (e) => {
                 e.preventDefault();
                 document.body.classList.toggle('invert-mode');
                 localStorage.setItem('theme-invert', document.body.classList.contains('invert-mode'));
+            });
+
+            // -----------------------------------------
+            // 4. 슬라이드 지원 라이트박스 모달 (확대/스크롤/슬라이드)
+            // -----------------------------------------
+            const imagesList = ["../images/uploads/upload_1782841090402.png"];
+            let currentZoom = 100;
+            let activeLightboxIndex = 0;
+
+            const lightboxModal = document.getElementById('image-lightbox-modal');
+            const lightboxImage = document.getElementById('lightbox-image');
+            const lightboxCounter = document.getElementById('lightbox-counter');
+            const lightboxPrev = document.getElementById('lightbox-prev');
+            const lightboxNext = document.getElementById('lightbox-next');
+            const lightboxClose = document.getElementById('lightbox-close');
+            const lightboxZoomIn = document.getElementById('lightbox-zoom-in');
+            const lightboxZoomOut = document.getElementById('lightbox-zoom-out');
+            const lightboxZoomReset = document.getElementById('lightbox-zoom-reset');
+            const lightboxZoomVal = document.getElementById('lightbox-zoom-val');
+            const lightboxScrollContainer = document.getElementById('lightbox-scroll-container');
+
+            function openLightbox(index) {
+                activeLightboxIndex = index;
+                currentZoom = 100;
+                applyZoom();
+                updateLightboxImage();
+                lightboxModal.classList.remove('hidden');
+                lightboxModal.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeLightbox() {
+                lightboxModal.classList.add('hidden');
+                lightboxModal.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+            }
+
+            function updateLightboxImage() {
+                if (!imagesList || imagesList.length === 0) return;
+                lightboxImage.src = imagesList[activeLightboxIndex];
+                if (lightboxCounter) {
+                    lightboxCounter.innerText = `${activeLightboxIndex + 1} / ${imagesList.length}`;
+                }
+                if (imagesList.length <= 1) {
+                    lightboxPrev.style.display = 'none';
+                    lightboxNext.style.display = 'none';
+                } else {
+                    lightboxPrev.style.display = 'flex';
+                    lightboxNext.style.display = 'flex';
+                }
+                lightboxScrollContainer.scrollTop = 0;
+            }
+
+            function applyZoom() {
+                lightboxImage.style.width = `${currentZoom}%`;
+                lightboxZoomVal.innerText = `${currentZoom}%`;
+            }
+
+            if (lightboxZoomIn) {
+                lightboxZoomIn.addEventListener('click', () => {
+                    if (currentZoom < 250) {
+                        currentZoom += 25;
+                        applyZoom();
+                    }
+                });
+            }
+
+            if (lightboxZoomOut) {
+                lightboxZoomOut.addEventListener('click', () => {
+                    if (currentZoom > 50) {
+                        currentZoom -= 25;
+                        applyZoom();
+                    }
+                });
+            }
+
+            if (lightboxZoomReset) {
+                lightboxZoomReset.addEventListener('click', () => {
+                    currentZoom = 100;
+                    applyZoom();
+                });
+            }
+
+            if (lightboxPrev) {
+                lightboxPrev.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    activeLightboxIndex = (activeLightboxIndex - 1 + imagesList.length) % imagesList.length;
+                    updateLightboxImage();
+                });
+            }
+
+            if (lightboxNext) {
+                lightboxNext.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    activeLightboxIndex = (activeLightboxIndex + 1) % imagesList.length;
+                    updateLightboxImage();
+                });
+            }
+
+            if (lightboxClose) {
+                lightboxClose.addEventListener('click', closeLightbox);
+            }
+
+            // 라이트박스 터치 스와이프 (모바일)
+            let touchStartX = 0;
+            let touchEndX = 0;
+            lightboxScrollContainer.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            lightboxScrollContainer.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                const diffX = touchStartX - touchEndX;
+                if (Math.abs(diffX) > 50 && imagesList.length > 1) {
+                    if (diffX > 0) {
+                        activeLightboxIndex = (activeLightboxIndex + 1) % imagesList.length;
+                    } else {
+                        activeLightboxIndex = (activeLightboxIndex - 1 + imagesList.length) % imagesList.length;
+                    }
+                    updateLightboxImage();
+                }
+            }, { passive: true });
+
+            // ESC 및 방향키 제어
+            window.addEventListener('keydown', (e) => {
+                if (lightboxModal.classList.contains('hidden')) return;
+                if (e.key === 'Escape') {
+                    closeLightbox();
+                } else if (e.key === 'ArrowLeft' && imagesList.length > 1) {
+                    activeLightboxIndex = (activeLightboxIndex - 1 + imagesList.length) % imagesList.length;
+                    updateLightboxImage();
+                } else if (e.key === 'ArrowRight' && imagesList.length > 1) {
+                    activeLightboxIndex = (activeLightboxIndex + 1) % imagesList.length;
+                    updateLightboxImage();
+                }
+            });
+
+            // 상세 페이지 대표 이미지 클릭 시 라이트박스 슬라이드 모달 열기
+            const detailImgs = document.querySelectorAll('.project-image-column img, .project-image-display, [data-lightbox-index]');
+            detailImgs.forEach(img => {
+                img.style.cursor = 'pointer';
+                img.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openLightbox(0);
+                });
             });
 
         });
