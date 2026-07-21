@@ -35,10 +35,15 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 7rem 4rem 4.5rem 4rem;
+    padding: 5rem 4rem; /* 상하 여백 5rem 통일 */
     border-bottom: var(--border-stroke);
     position: relative;
     overflow: hidden;
+}
+
+/* 첫 번째 섹션은 상단 고정 헤더 높이 반영 */
+.project-section:first-of-type {
+    padding-top: calc(5rem + 4.5rem);
 }
 
 /* 헤더 및 레이아웃 구조 */
@@ -124,10 +129,14 @@ main.main-content {
 /* 반응형 미디어 쿼리 (768px 이하 모바일 디바이스) */
 @media (max-width: 768px) {
     .project-section {
-        padding: 2rem 1.5rem;
+        padding: 4.5rem 1.25rem; /* 모바일 상하 여백 4.5rem 통일 */
         height: auto;
-        min-height: 100dvh;
+        min-height: auto; /* 텅 비어 보이는 100dvh 강제 제거 */
         scroll-snap-align: none;
+    }
+
+    .project-section:first-of-type {
+        padding-top: calc(4.5rem + 3.8rem); /* 모바일 헤더 높이 반영 */
     }
     
     .scroll-container {
@@ -137,12 +146,48 @@ main.main-content {
     }
     
     body > header {
-        padding: 1rem 1.5rem;
+        padding: 0.85rem 1.25rem;
+    }
+    
+    .logo-title {
+        font-size: 0.85rem;
+    }
+    
+    .logo-subtitle {
+        font-size: 0.42rem;
+        letter-spacing: 0.08em;
+    }
+    
+    .nav-links {
+        gap: 1rem;
+    }
+    
+    .nav-link {
+        font-size: 0.78rem;
     }
     
     .grid-container {
         grid-template-columns: 1fr;
         gap: 1.5rem;
+    }
+}
+
+/* 중간 해상도 (태블릿 및 소형 노트북 769px ~ 1200px) */
+@media (min-width: 769px) and (max-width: 1200px) {
+    .project-section {
+        padding: 6.5rem 2.5rem 3.5rem 2.5rem;
+    }
+
+    .project-detail-section {
+        padding: 6rem 2.5rem 4rem 2.5rem;
+    }
+    
+    body > header {
+        padding: 1.2rem 2.5rem;
+    }
+    
+    .admin-panel-container {
+        padding: 4rem 2.5rem 8rem 2.5rem;
     }
 }
 
@@ -158,7 +203,7 @@ main.main-content {
     scroll-snap-align: none;
     border-bottom: none;
     display: block;
-    padding: 8rem 4rem 6rem 4rem;
+    padding: 6rem 4rem 6rem 4rem;
     overflow: visible;
 }
 
@@ -232,6 +277,7 @@ main.main-content {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    gap: 2.5rem;
 }
 
 .project-card-header {
@@ -244,11 +290,19 @@ main.main-content {
 
 .project-card-body {
     margin: auto 0;
-    padding: 2rem 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.project-card-body .project-category {
+    margin-bottom: 0;
 }
 
 .project-card-desc {
-    margin-top: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 0; /* desc 마진 바텀 제거 및 gap으로 관리 */
 }
 
 .project-card-footer {
@@ -260,8 +314,24 @@ main.main-content {
     width: 100%;
 }
 
+.footer-right-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.6rem; /* 갭 축소 */
+}
+
+.project-meta-group {
+    display: flex;
+    gap: 2rem;
+}
+
 /* 모바일 전용 반응형 그리드 오버라이드 */
 @media (max-width: 768px) {
+    .project-detail-section {
+        padding: 5.5rem 1.25rem 3.5rem 1.25rem;
+    }
+
     .project-info-column, .project-image-column {
         grid-column: span 12;
     }
@@ -278,21 +348,73 @@ main.main-content {
     .project-link-row, .project-meta-full-row {
         grid-column: span 1;
     }
-    .project-footer {
+    
+    .project-card-container {
+        height: auto;
+        display: flex;
         flex-direction: column;
-        align-items: flex-start !important;
-        gap: 1.5rem;
+        justify-content: flex-start;
+        gap: 2.4rem; /* container gap으로 사이 여백 관리 */
     }
-    .project-meta-group {
+    
+    .project-card-body {
+        margin: 0;
+        padding: 0;
+        display: flex;
         flex-direction: column;
-        gap: 0.5rem !important;
+        gap: 0.75rem; /* 내적 요소 gap */
     }
+
+    .project-card-body .project-category {
+        margin-bottom: 0;
+    }
+
+    .project-card-body .project-title {
+        margin-bottom: 0;
+    }
+    
+    .project-card-desc {
+        margin-top: 0;
+        margin-bottom: 0; /* desc 마진 바텀 제거 */
+        font-size: 0.98rem;
+        line-height: 1.65;
+    }
+    
+    .project-footer.project-card-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        padding-top: 0;
+        margin-top: 0;
+        border-top: none;
+    }
+    
+    .footer-right-column {
+        width: 100%;
+        align-items: flex-start;
+        gap: 0.75rem; /* 갭 축소 */
+    }
+    
     .project-actions-group {
         width: 100%;
-        flex-direction: column;
+        display: flex;
+        flex-direction: row;
+        gap: 1.4rem;
+        flex-wrap: wrap;
     }
+    
     .project-actions-group .btn-brutal {
+        width: auto;
+        padding: 0.3rem 0;
+        font-size: 0.92rem;
+    }
+    
+    .project-meta-group {
         width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 1.8rem;
     }
 }
 

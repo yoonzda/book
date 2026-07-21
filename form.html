@@ -187,12 +187,22 @@
 
                 <div class="form-group">
                     <label for="troubleshooting" class="label-brutal">문제 해결 및 성과</label>
-                    <textarea id="troubleshooting" class="textarea-brutal"></textarea>
+                    <div class="textarea-container">
+                        <div class="textarea-toolbar">
+                            <button type="button" class="btn-highlight-text" onclick="applyHighlightTag('troubleshooting')" title="노란 형광펜 서식 추가 (==강조==)">강조</button>
+                        </div>
+                        <textarea id="troubleshooting" class="textarea-brutal"></textarea>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label for="description" class="label-brutal">상세 설명</label>
-                    <textarea id="description" class="textarea-brutal" required></textarea>
+                    <div class="textarea-container">
+                        <div class="textarea-toolbar">
+                            <button type="button" class="btn-highlight-text" onclick="applyHighlightTag('description')" title="노란 형광펜 서식 추가 (==강조==)">강조</button>
+                        </div>
+                        <textarea id="description" class="textarea-brutal" required></textarea>
+                    </div>
                 </div>
 
                 <!-- 저장 버튼은 하단 플로팅 바에 위치함 -->
@@ -599,6 +609,34 @@
 
 
         });
+
+        // 형광펜 태그(==강조==) 헬퍼 함수
+        function applyHighlightTag(targetId) {
+            const textarea = document.getElementById(targetId);
+            if (!textarea) return;
+
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+            const selectedText = text.substring(start, end);
+
+            let replacement = '';
+            if (selectedText.length > 0) {
+                replacement = `==${selectedText}==`;
+            } else {
+                replacement = `==강조할 텍스트==`;
+            }
+
+            textarea.value = text.substring(0, start) + replacement + text.substring(end);
+            textarea.focus();
+
+            if (selectedText.length > 0) {
+                textarea.setSelectionRange(start, start + replacement.length);
+            } else {
+                // '강조할 텍스트' 7글자 부분 선택 상태로 만들기
+                textarea.setSelectionRange(start + 2, start + 9);
+            }
+        }
     </script>
 </body>
 </html>

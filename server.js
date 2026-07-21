@@ -101,6 +101,13 @@ const saveBase64Image = (base64Str) => {
     }
 };
 
+// --- 형광펜 마크다운 파싱 도우미 함수 ---
+const formatHighlightText = (text) => {
+    if (!text) return '';
+    // ==텍스트== 패턴을 <mark class="highlight-yellow">텍스트</mark> 로 변환
+    return text.replace(/==([^=]+)==/g, '<mark class="highlight-yellow">$1</mark>');
+};
+
 // --- 정적 웹페이지 컴파일러 엔진 ---
 const compileStaticPages = () => {
     const projects = readProjectsData();
@@ -140,11 +147,11 @@ const compileStaticPages = () => {
                                 <a href="projects/${proj.id}.html" class="project-link" data-image="${proj.imageUrl}">${proj.title}</a>
                             </h2>
                         </div>
-                        <p class="project-desc project-card-desc">${proj.subtitle || proj.description || ''}</p>
+                        <p class="project-desc project-card-desc">${formatHighlightText(proj.subtitle || proj.description || '')}</p>
                     </div>
                     <footer class="project-footer project-card-footer">
                         <div></div>
-                        <div class="footer-right-column" style="display: flex; flex-direction: column; align-items: flex-end; gap: 1rem;">
+                        <div class="footer-right-column">
                             <div class="project-actions-group">
                                 ${proj.link ? `
                                 <a href="${proj.link}" target="_blank" class="btn-brutal btn-live-site">
@@ -156,9 +163,9 @@ const compileStaticPages = () => {
                                     <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                 </a>
                             </div>
-                            <div class="project-meta-group" style="display: flex; gap: 2rem;">
+                            <div class="project-meta-group">
                                 <span class="project-meta-item"><span class="project-meta-label">PERIOD</span>${formattedDate}</span>
-                                <span class="project-meta-item"><span class="project-meta-label">CONTRIBUTION</span>${proj.contribution || '100%'}</span>
+                                <span class="project-meta-item"><span class="project-meta-label">TYPE</span>${proj.projectType || '개인 프로젝트'}</span>
                             </div>
                         </div>
                     </footer>
@@ -244,16 +251,16 @@ const compileStaticPages = () => {
 
         // 3. 문제 해결 및 성과 (Troubleshooting) 렌더링
         const troubleshootingHtml = proj.troubleshooting ? `
-                        <div class="project-troubleshooting-section" style="border-top: var(--border-stroke); padding-top: 2rem;">
+                        <div class="project-troubleshooting-section">
                             <span class="project-meta-label project-meta-sublabel">TROUBLESHOOTING & IMPACT</span>
-                            <p class="project-desc" style="white-space: pre-wrap; font-size: 1.05rem; line-height: 1.8; margin-top: 0.5rem; max-width: 100%;">${proj.troubleshooting}</p>
+                            <p class="project-desc project-troubleshooting-desc">${formatHighlightText(proj.troubleshooting)}</p>
                         </div>` : '';
 
         let html = projectTemplate
             .replace(/{{TITLE}}/g, proj.title)
             .replace(/{{PROJECT_NUM}}/g, num)
             .replace(/{{PROJECT_TYPE_HTML}}/g, projectTypeHtml)
-            .replace(/{{DESCRIPTION}}/g, proj.description)
+            .replace(/{{DESCRIPTION}}/g, formatHighlightText(proj.description || ''))
             .replace(/{{IMAGE}}/g, proj.imageUrl.startsWith('http') || proj.imageUrl.startsWith('/') ? proj.imageUrl : `../${proj.imageUrl}`)
             .replace(/{{PERIOD}}/g, formattedDate)
             .replace(/{{CONTRIBUTION}}/g, proj.contribution || '100%')
